@@ -1,0 +1,9 @@
+<!DOCTYPE RCC>
+<RCC version="1.0">
+<qresource>
+    <file>happy.png</file>
+    <file>poker.png</file>
+    <file>angry.png</file>
+    <file>rage.png</file>
+</qresource>
+</RCC>

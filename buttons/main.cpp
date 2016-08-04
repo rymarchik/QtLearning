@@ -17,15 +17,15 @@ int main(int argc, char *argv[])
     QPushButton* b3 = new QPushButton("Flat");
     b3->setFlat(true);
 
-    QPushButton* b4 = new QPushButton;
+    QPushButton* b4 = new QPushButton("f");
     QPixmap pix(":/cat.jpg");
     b4->setIcon(pix);
     b4->setIconSize(pix.size());
     QMenu* menu = new QMenu(b4);
-    menu->addAction("Funny cat", &grb, SLOT(funny(b4))); //слот с параметром почему-то не работает
-    menu->addAction("Sad cat", &grb, SLOT(sad(b4))); //слот с параметром почему-то не работает
+    menu->addAction("Тыц");
+    menu->addAction("Тыц");
     menu->addSeparator();
-    menu->addAction("Exit", qApp, SLOT(quit()));
+    menu->addAction("Exit", QApplication::quit);
     b4->setMenu(menu);
 
     QCheckBox* c1 = new QCheckBox("Normal");
