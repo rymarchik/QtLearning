@@ -26,7 +26,7 @@ void Server::slotNewConnection() {
     QTcpSocket* socket = server->nextPendingConnection();
     connect(socket, SIGNAL(disconnected()), socket, SLOT(deleteLater()));
     connect(socket, SIGNAL(readyRead()), SLOT(slotReadClient()));
-    sendToClient(socket, "Server: connected!");
+    sendToClient(socket, "Server: you connected!");
 }
 
 void Server::slotReadClient() {

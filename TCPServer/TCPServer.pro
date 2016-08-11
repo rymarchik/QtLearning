@@ -16,3 +16,5 @@ SOURCES += main.cpp\
         server.cpp\
 
 HEADERS  += server.h
+
+QMAKE_LFLAGS += -static -static-libgcc
