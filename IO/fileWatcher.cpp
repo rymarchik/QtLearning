@@ -3,7 +3,6 @@
 FileWatcher::FileWatcher(QWidget *parent) : QTextEdit(parent)
 {
     setWindowTitle("File Watcher");
-    setReadOnly(1);
 }
 
 void FileWatcher::slotFileChanged(const QString& str) {
