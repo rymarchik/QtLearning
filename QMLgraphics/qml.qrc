@@ -1,0 +1,7 @@
+<RCC>
+    <qresource prefix="/">
+        <file>main.qml</file>
+        <file>enot.jpg</file>
+        <file>Enot.qml</file>
+    </qresource>
+</RCC>

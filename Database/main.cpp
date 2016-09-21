@@ -6,7 +6,7 @@ static bool createConnection() {
     QSqlDatabase db = QSqlDatabase::addDatabase("QPSQL");
     db.setDatabaseName("postgres");
     db.setUserName("postgres");
-    db.setPassword("root");
+//    db.setPassword("root");
     db.setHostName("localhost");
     db.setPort(5432);
 
@@ -67,9 +67,6 @@ int main(int argc, char *argv[])
         age = query.value(rec.indexOf("age")).toInt();
         qDebug() << id << " " << name << " " << age;
     }
-
-//    Widget w;
-//    w.show();
 
     return a.exec();
 }
