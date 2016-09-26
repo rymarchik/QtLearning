@@ -1,0 +1,8 @@
+<RCC>
+    <qresource prefix="/">
+        <file>main.qml</file>
+        <file>enot.jpg</file>
+        <file>yoba.png</file>
+        <file>message.png</file>
+    </qresource>
+</RCC>

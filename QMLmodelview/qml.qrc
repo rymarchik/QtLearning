@@ -1,0 +1,11 @@
+<RCC>
+    <qresource prefix="/">
+        <file>main.qml</file>
+        <file>yoba_full.png</file>
+        <file>games.qml</file>
+        <file>images/cs_full.png</file>
+        <file>images/d2_full.png</file>
+        <file>images/h3_full.png</file>
+        <file>images/wow_full.png</file>
+    </qresource>
+</RCC>

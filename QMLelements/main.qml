@@ -24,9 +24,15 @@ ApplicationWindow {
         color: "darkkhaki"
         width: parent.width / 1.5
         height: parent.height / 1.5
-        border.color: "black"
         anchors.top: parent.top
         anchors.left: parent.left
+        border.color: "black"
+
+        opacity: focus ? 1 : 0.3
+        KeyNavigation.tab: rect2
+        KeyNavigation.backtab: movingText
+        focus: true
+
         onWidthChanged: {
             console.log("width changed:" + width)
         }
@@ -42,8 +48,11 @@ ApplicationWindow {
         anchors.bottom: parent.bottom
         anchors.left: rect1.horizontalCenter
         anchors.right: parent.right
-        opacity: 0.1
         border.color: "red"
+
+        opacity: focus ? 1 : 0.3
+        KeyNavigation.tab: rect1
+        KeyNavigation.backtab: movingText
     }
 
     Item {
@@ -56,12 +65,18 @@ ApplicationWindow {
     }
 
     Text {
+        id: movingText
         x: rect1.width
         y: 0
         text: elem.name + "<br>" + elem.ver + "<br>" + elem.pi + "<br>" + elem.condition + "<br>" + elem.link
         font.family: "Lucida Calligraphy"
         font.bold: true
         font.pointSize: 12
+
+        Keys.onLeftPressed: x -= 3
+        Keys.onRightPressed: x += 3
+        Keys.onUpPressed: y -= 3
+        Keys.onDownPressed: y += 3
     }
 
     MyElement {

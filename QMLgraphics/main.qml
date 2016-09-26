@@ -1,10 +1,33 @@
-import QtQuick 2.7
+import QtQuick 2.2
 import QtQuick.Window 2.2
 
 Window {
     visible: true
     width: 400
     height: 400
+    color: "lightgreen"
+    signal mousePositionChanged(real x, real y);
+    onMousePositionChanged: color = Qt.rgba(x / width, y / height, 1);
+
+    MouseArea {
+        anchors.fill: parent
+        acceptedButtons: Qt.RightButton | Qt.LeftButton
+        onPressed: {
+            if (mouse.button === Qt.RightButton)
+                color = "yellow"
+            else
+                color = "aqua"
+        }
+        onReleased: {
+            color = "lightgreen"
+        }
+        hoverEnabled: true
+        onEntered: color = "red"
+        onExited: color = "lightgreen"
+        onMouseXChanged: mousePositionChanged(mouseX, mouseY)
+        onMouseYChanged: mousePositionChanged(mouseX, mouseY)
+    }
+
     Canvas {
         anchors.fill: parent
         onPaint: {
