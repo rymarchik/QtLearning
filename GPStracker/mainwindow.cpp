@@ -99,6 +99,9 @@ void MainWindow::parseInput() {
         QStringList fields = line.split(",");
 
         if (fields[0].contains(ggaRegExp)) {
+            // GPS Quality field cannot be NULL
+            if (fields[6].isEmpty())
+                continue;
             if (fields[1].contains(timeRegExp)) {
                 int timeint = timeRegExp.cap(1).toInt();
                 time = QDateTime::fromString(QString::number(timeint), "hhmmss");
@@ -136,20 +139,23 @@ void MainWindow::parseInput() {
                       QString::number(latitude) + "\tДолгота: " + QString::number(longitude) +
                       "\tВысота над уровнем моря: " + QString::number(altitude));
 
-    QString insertRow = "INSERT INTO location (id, latitude, longitude, altitude, time)"
-                         " VALUES (%1, %2, %3, %4, '%5');";
-    QString deleteRow = "DELETE FROM location WHERE id = 1";
+//    QString insertRow = "INSERT INTO location (id, latitude, longitude, altitude, time)"
+//                         " VALUES (%1, %2, %3, %4, '%5');";
+//    QString str = insertRow.arg(id).arg(latitude).arg(longitude).arg(altitude).arg(time.toString("hh:mm:ss"));
+    QString updateRow = "UPDATE own_forces.combatobject_location SET obj_latitude = %1,"
+                        "obj_longitude = %2, obj_altitude = %3, tid = %4, btime = '%5' WHERE combatobjectid = 1;";
+    QString str = updateRow.arg(latitude).arg(longitude).arg(altitude).arg(id).arg(time.toString("hh:mm:ss"));
 
-    if (id == 11) {
-        if (!query.exec(deleteRow)) {
-            qDebug() << "Unable to delete row";
-        }
-        id = 1;
-    }
+//    QString deleteRow = "DELETE FROM location WHERE id = 1";
+//    if (id == 11) {
+//        if (!query.exec(deleteRow)) {
+//            qDebug() << "Unable to delete row";
+//        }
+//        id = 1;
+//    }
 
-    QString str = insertRow.arg(id).arg(latitude).arg(longitude).arg(altitude).arg(time.toString("hh:mm:ss"));
     if (!query.exec(str)) {
-        qDebug() << "Unable to make insert operation";
+        qDebug() << "Unable to update values";
     }
     id++;
 }
