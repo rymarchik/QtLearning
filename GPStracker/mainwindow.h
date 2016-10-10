@@ -5,6 +5,7 @@
 #include <QtWidgets>
 #include <QtSerialPort/QSerialPort>
 #include <QtPositioning>
+#include <QProcess>
 
 class MainWindow : public QWidget
 {
@@ -13,7 +14,7 @@ class MainWindow : public QWidget
 public:
     explicit MainWindow();
 private:
-    QSqlDatabase* db;
+    QSqlDatabase db;
     QSerialPort* serial;
     QTextEdit* textEdit;
     QTextEdit* textEdit2;
@@ -24,12 +25,15 @@ private:
     QTimer* timer;
     int id;
 //    QNmeaPositionInfoSource *nmeaSource;
+    QPushButton* openQGISButton;
+    QProcess* proc;
 
     void parseInput();
 private slots:
     void openSerialPort();
     void closeSerialPort();
     void readData();
+    void openQGIS();
 
 //    void positionUpdated(const QGeoPositionInfo &info);
 };

@@ -29,16 +29,19 @@ MainWindow::MainWindow()
     baudRate->addItems(list2);
     openPortButton = new QPushButton("Open port");
     closePortButton = new QPushButton("Close port");
+    openQGISButton = new QPushButton("Open QGIS");
     QVBoxLayout* layout2 = new QVBoxLayout;
     layout2->addWidget(portName);
     layout2->addWidget(baudRate);
     layout2->addWidget(openPortButton);
     layout2->addWidget(closePortButton);
+    layout2->addWidget(openQGISButton);
 
     QHBoxLayout* mainlayout = new QHBoxLayout;
     mainlayout->addLayout(layout);
     mainlayout->addLayout(layout2);
 
+    proc = new QProcess(this);
     timer = new QTimer;
     id = 1;
 
@@ -46,6 +49,7 @@ MainWindow::MainWindow()
     connect(closePortButton, &QPushButton::clicked, this, &MainWindow::closeSerialPort);
     connect(timer, SIGNAL(timeout()), this, SLOT(readData()));
 //    connect(nmeaSource, SIGNAL(positionUpdated(QGeoPositionInfo)), this, SLOT(positionUpdated(QGeoPositionInfo)));
+    connect(openQGISButton, &QPushButton::clicked, this, MainWindow::openQGIS);
 
     setLayout(mainlayout);
     resize(1000,400);
@@ -158,6 +162,10 @@ void MainWindow::parseInput() {
         qDebug() << "Unable to update values";
     }
     id++;
+}
+
+void MainWindow::openQGIS() {
+    proc->start("qgis.bat");
 }
 
 //void MainWindow::positionUpdated(const QGeoPositionInfo &info) {

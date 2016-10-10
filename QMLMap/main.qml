@@ -7,7 +7,8 @@ Window {
     visible: true
     width: 640
     height: 480
-    title: qsTr("Hello World")
+    title: qsTr("My location!")
+    property variant locationVolat: QtPositioning.coordinate(53.931052, 27.634170)
 
 //    Plugin {
 //        id: osm
@@ -18,36 +19,56 @@ Window {
 //        PluginParameter { name: "osm.routing.host"; value: "http://osrm.server.address/viaroute" }
 //        PluginParameter { name: "osm.geocoding.host"; value: "http://geocoding.server.address" }
 //    }
-//    Plugin {
-//        id: here
-//        name: "here"
-//        PluginParameter { name: "here.app_id"; value: "bPTNwzHlkiS3xScHR1yO" }
-//        PluginParameter { name: "here.token"; value: "BX9WhKp3gZiNa2J4chisQQ" }
-//    }
-        Plugin {
-            id: mapbox
-            name: "mapbox"
-            PluginParameter { name: "mapbox.map_id"; value: "mapbox.landsat-live" }
-            PluginParameter { name: "mapbox.access_token"; value: "pk.eyJ1IjoiaW5zdXJnIiwiYSI6ImNpdHh6Mno5eDAwM3Yybms5bmE1c2xuNHoifQ.vtH2RrfMDazayR93b3qidw" }
+    Plugin {
+        id: osm
+        name: "osm"
+        PluginParameter {
+            name: "osm.mapping.host";
+            value: "http://a.tile.openstreetmap.org/"
         }
-//pk.eyJ1IjoiaW5zdXJnIiwiYSI6ImNpdHh6Mno5eDAwM3Yybms5bmE1c2xuNHoifQ.vtH2RrfMDazayR93b3qidw
+    }
+    Plugin {
+        id: here
+        name: "here"
+        PluginParameter { name: "here.app_id"; value: "bPTNwzHlkiS3xScHR1yO" }
+        PluginParameter { name: "here.token"; value: "BX9WhKp3gZiNa2J4chisQQ" }
+    }
+    Plugin {
+        id: mapbox
+        name: "mapbox"
+        PluginParameter { name: "mapbox.map_id"; value: "mapbox.satellite" }
+        PluginParameter { name: "mapbox.access_token"; value: "pk.eyJ1IjoiaW5zdXJnIiwiYSI6ImNpdHh6Mno5eDAwM3Yybms5bmE1c2xuNHoifQ.vtH2RrfMDazayR93b3qidw" }
+    }
+
     Map {
         anchors.fill: parent
         id: map
 
-        plugin: mapbox
+        plugin: here
 //        activeMapType: MapType.TerrainMap
+//        activeMapType: map.supportedMapTypes[6]
 
         center {
-            latitude: 53.5
-            longitude: 27.5
+            latitude: 53.931052
+            longitude: 27.634170
         }
-        zoomLevel: map.maximumZoomLevel
+        zoomLevel: 16
 
-        gesture.enabled: true
+        MapQuickItem {
+            id: marker
+            coordinate: locationVolat
+            anchorPoint.x: image.width/2
+            anchorPoint.y: image.height
+
+            sourceItem: Image {
+                id: image; source: "marker.png"
+            }
+            zoomLevel: 16
+        }
     }
 
     PositionSource {
+        id: pos
         onPositionChanged: {
             // center the map on the current position
             map.center = position.coordinate
