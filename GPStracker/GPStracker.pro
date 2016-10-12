@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui serialport positioning sql
+QT       += core gui serialport positioning sql quick qml quickwidgets
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -18,3 +18,6 @@ SOURCES += main.cpp\
 HEADERS  += mainwindow.h
 
 FORMS    +=
+
+RESOURCES += \
+    resources.qrc

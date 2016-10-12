@@ -13,11 +13,12 @@ MainWindow::MainWindow()
     db.setPort(5432);
     db.open();
 
+    qmlwgt = new QQuickWidget(QUrl("qrc:///main.qml"));
+    contxt = qmlwgt->rootContext();
     textEdit = new QTextEdit;
-    textEdit2 = new QTextEdit;
     QVBoxLayout* layout = new QVBoxLayout;
+    layout->addWidget(qmlwgt);
     layout->addWidget(textEdit);
-    layout->addWidget(textEdit2);
 
     portName = new QComboBox;
     QStringList list1;
@@ -47,12 +48,12 @@ MainWindow::MainWindow()
 
     connect(openPortButton, &QPushButton::clicked, this, &MainWindow::openSerialPort);
     connect(closePortButton, &QPushButton::clicked, this, &MainWindow::closeSerialPort);
-    connect(timer, SIGNAL(timeout()), this, SLOT(readData()));
+    connect(timer, SIGNAL(timeout()), this, SLOT(parseInput()));
 //    connect(nmeaSource, SIGNAL(positionUpdated(QGeoPositionInfo)), this, SLOT(positionUpdated(QGeoPositionInfo)));
     connect(openQGISButton, &QPushButton::clicked, this, MainWindow::openQGIS);
 
     setLayout(mainlayout);
-    resize(1000,400);
+    resize(qmlwgt->width(), qmlwgt->height());
 }
 
 void MainWindow::openSerialPort() {
@@ -79,11 +80,11 @@ void MainWindow::closeSerialPort() {
     }
 }
 
-void MainWindow::readData() {
-    QString data = serial->readAll();
-    textEdit->setText(data);
-    parseInput();
-}
+//void MainWindow::readData() {
+//    QString data = serial->readAll();
+//    textEdit->setText(data);
+//    parseInput();
+//}
 
 void MainWindow::parseInput() {
     QRegExp ggaRegExp("(GP|GN|GL)GGA", Qt::CaseInsensitive);
@@ -96,7 +97,7 @@ void MainWindow::parseInput() {
     double longitude;
     double altitude;
 
-    QString line = textEdit->toPlainText();
+    QString line = serial->readAll();
     QStringList lines = line.split('$');
 
     foreach (line, lines) {
@@ -139,9 +140,12 @@ void MainWindow::parseInput() {
 //            m_items.lband_chan_num = fields[14].toInt();
         }
     }
-    textEdit2->append("Время: " + time.toLocalTime().toString("hh:mm:ss") + "\tШирота: " +
+    textEdit->append("Время: " + time.toLocalTime().toString("hh:mm:ss") + "\tШирота: " +
                       QString::number(latitude) + "\tДолгота: " + QString::number(longitude) +
                       "\tВысота над уровнем моря: " + QString::number(altitude));
+
+    contxt->setContextProperty("myLatitude", latitude);
+    contxt->setContextProperty("myLongitude", longitude);
 
 //    QString insertRow = "INSERT INTO location (id, latitude, longitude, altitude, time)"
 //                         " VALUES (%1, %2, %3, %4, '%5');";
