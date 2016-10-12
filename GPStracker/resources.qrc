@@ -4,5 +4,8 @@
         <file>marker.png</file>
         <file>nmeadata.txt</file>
         <file>satellitedata.txt</file>
+        <file>helper.js</file>
+        <file>resources/scale.png</file>
+        <file>resources/scale_end.png</file>
     </qresource>
 </RCC>

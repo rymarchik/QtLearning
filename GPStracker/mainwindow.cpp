@@ -53,7 +53,6 @@ MainWindow::MainWindow()
     connect(openQGISButton, &QPushButton::clicked, this, MainWindow::openQGIS);
 
     setLayout(mainlayout);
-    resize(qmlwgt->width(), qmlwgt->height());
 }
 
 void MainWindow::openSerialPort() {
