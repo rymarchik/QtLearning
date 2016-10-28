@@ -41,13 +41,16 @@ int main(int argc, char *argv[])
 //        qDebug() << "Unable to create a table";
 //    }
 
+    double lon = 27.6;
     double lat = 66.01;
+    double alt = 245;
     QDateTime time = QDateTime::currentDateTime();
     QString insertInfo = "INSERT INTO own_forces.combatobject_location (combatobjectid, obj_latitude, btime) VALUES(%1, %2, '%3');";
     QString ins = insertInfo.arg("1").arg(lat).arg(time.toString("hh:mm:ss"));
 
-    QString updateInfo = "UPDATE own_forces.combatobject_location SET obj_latitude = %1, btime = '%2' WHERE combatobjectid = %3;";
-    QString upd = updateInfo.arg(lat).arg(time.toString("hh:mm:ss")).arg("1");
+    QString updateInfo = "UPDATE own_forces.combatobject_location SET "
+                         "obj_location = ST_SetSRID(ST_MakePoint(%1, %2, %3), 4326), btime = '%4' WHERE combatobjectid = %5;";
+    QString upd = updateInfo.arg(lon).arg(lat).arg(alt).arg(time.toString("hh:mm:ss")).arg("1");
 
 //    query.prepare(updateInfo);
 //    query.addBindValue(lat);

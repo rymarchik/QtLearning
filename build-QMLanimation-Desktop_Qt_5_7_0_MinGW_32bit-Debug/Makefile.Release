@@ -16,7 +16,7 @@ CFLAGS        = -pipe -fno-keep-inline-dllexport -O2 -Wall -Wextra $(DEFINES)
 CXXFLAGS      = -pipe -fno-keep-inline-dllexport -O2 -std=gnu++11 -frtti -Wall -Wextra -fexceptions -mthreads $(DEFINES)
 INCPATH       = -I..\QMLanimation -I. -IC:\Qt\Qt5.7.0\5.7\mingw53_32\include -IC:\Qt\Qt5.7.0\5.7\mingw53_32\include\QtQuick -IC:\Qt\Qt5.7.0\5.7\mingw53_32\include\QtGui -IC:\Qt\Qt5.7.0\5.7\mingw53_32\include\QtANGLE -IC:\Qt\Qt5.7.0\5.7\mingw53_32\include\QtQml -IC:\Qt\Qt5.7.0\5.7\mingw53_32\include\QtNetwork -IC:\Qt\Qt5.7.0\5.7\mingw53_32\include\QtCore -Irelease -IC:\Qt\Qt5.7.0\5.7\mingw53_32\mkspecs\win32-g++ 
 LINKER      =        g++
-LFLAGS        =        -Wl,-s -Wl,-subsystem,windows -mthreads
+LFLAGS        =        -static -static-libgcc -Wl,-s -Wl,-subsystem,windows -mthreads
 LIBS        =        -lmingw32 -LC:\Qt\Qt5.7.0\5.7\mingw53_32\lib C:\Qt\Qt5.7.0\5.7\mingw53_32\lib\libqtmain.a -LC:\utils\postgresql\pgsql\lib -LC:\utils\my_sql\my_sql\lib -lshell32 C:\Qt\Qt5.7.0\5.7\mingw53_32\lib\libQt5Quick.a C:\Qt\Qt5.7.0\5.7\mingw53_32\lib\libQt5Gui.a C:\Qt\Qt5.7.0\5.7\mingw53_32\lib\libQt5Qml.a C:\Qt\Qt5.7.0\5.7\mingw53_32\lib\libQt5Network.a C:\Qt\Qt5.7.0\5.7\mingw53_32\lib\libQt5Core.a 
 QMAKE         = C:\Qt\Qt5.7.0\5.7\mingw53_32\bin\qmake.exe
 IDC           = idc
@@ -47,7 +47,7 @@ SOURCES       = ..\QMLanimation\main.cpp release\qrc_qml.cpp
 OBJECTS       = release/main.o \
 		release/qrc_qml.o
 
-DIST          =   ..\QMLanimation\main.cpp
+DIST          =  ..\QMLanimation\plugins.h ..\QMLanimation\main.cpp
 QMAKE_TARGET  = QMLanimation
 DESTDIR        = release\ #avoid trailing-slash linebreak
 TARGET         = QMLanimation.exe
@@ -92,8 +92,10 @@ compiler_rcc_clean:
 	-$(DEL_FILE) release\qrc_qml.cpp
 release/qrc_qml.cpp: ../QMLanimation/qml.qrc \
 		C:/Qt/Qt5.7.0/5.7/mingw53_32/bin/rcc.exe \
+		../QMLanimation/message.png \
 		../QMLanimation/enot.jpg \
-		../QMLanimation/main.qml
+		../QMLanimation/main.qml \
+		../QMLanimation/yoba.png
 	C:\Qt\Qt5.7.0\5.7\mingw53_32\bin\rcc.exe -name qml ..\QMLanimation\qml.qrc -o release\qrc_qml.cpp
 
 compiler_moc_header_make_all:
@@ -196,7 +198,13 @@ release/main.o: ../QMLanimation/main.cpp C:/Qt/Qt5.7.0/5.7/mingw53_32/include/Qt
 		C:/Qt/Qt5.7.0/5.7/mingw53_32/include/QtQml/qqmllist.h \
 		C:/Qt/Qt5.7.0/5.7/mingw53_32/include/QtCore/qmetaobject.h \
 		C:/Qt/Qt5.7.0/5.7/mingw53_32/include/QtQml/qqmlerror.h \
-		C:/Qt/Qt5.7.0/5.7/mingw53_32/include/QtQml/qqmldebug.h
+		C:/Qt/Qt5.7.0/5.7/mingw53_32/include/QtQml/qqmldebug.h \
+		../QMLanimation/plugins.h \
+		C:/Qt/Qt5.7.0/5.7/mingw53_32/include/QtCore/QtPlugin \
+		C:/Qt/Qt5.7.0/5.7/mingw53_32/include/QtCore/qplugin.h \
+		C:/Qt/Qt5.7.0/5.7/mingw53_32/include/QtCore/qpointer.h \
+		C:/Qt/Qt5.7.0/5.7/mingw53_32/include/QtCore/qjsonobject.h \
+		C:/Qt/Qt5.7.0/5.7/mingw53_32/include/QtCore/qjsonvalue.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o release\main.o ..\QMLanimation\main.cpp
 
 release/qrc_qml.o: release/qrc_qml.cpp 

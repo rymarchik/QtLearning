@@ -11,12 +11,12 @@ MAKEFILE      = Makefile.Debug
 
 CC            = gcc
 CXX           = g++
-DEFINES       = -DUNICODE -DQT_QML_DEBUG -DQT_QUICKWIDGETS_LIB -DQT_QUICK_LIB -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_SERIALPORT_LIB -DQT_POSITIONING_LIB -DQT_SQL_LIB -DQT_QML_LIB -DQT_NETWORK_LIB -DQT_CORE_LIB -DQT_NEEDS_QMAIN
+DEFINES       = -DQT_STATIC_BUILD -DQT_QML_DEBUG -DQT_QUICKWIDGETS_LIB -DQT_QUICK_LIB -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_SERIALPORT_LIB -DQT_POSITIONING_LIB -DQT_SQL_LIB -DQT_QML_LIB -DQT_NETWORK_LIB -DQT_CORE_LIB -DQT_NEEDS_QMAIN
 CFLAGS        = -pipe -fno-keep-inline-dllexport -g -Wall -Wextra $(DEFINES)
 CXXFLAGS      = -pipe -fno-keep-inline-dllexport -g -std=gnu++11 -frtti -Wall -Wextra -fexceptions -mthreads $(DEFINES)
 INCPATH       = -I..\GPStracker -I. -IC:\Qt\Qt5.7.0\5.7\mingw53_32\include -IC:\Qt\Qt5.7.0\5.7\mingw53_32\include\QtQuickWidgets -IC:\Qt\Qt5.7.0\5.7\mingw53_32\include\QtQuick -IC:\Qt\Qt5.7.0\5.7\mingw53_32\include\QtWidgets -IC:\Qt\Qt5.7.0\5.7\mingw53_32\include\QtGui -IC:\Qt\Qt5.7.0\5.7\mingw53_32\include\QtANGLE -IC:\Qt\Qt5.7.0\5.7\mingw53_32\include\QtSerialPort -IC:\Qt\Qt5.7.0\5.7\mingw53_32\include\QtPositioning -IC:\Qt\Qt5.7.0\5.7\mingw53_32\include\QtSql -IC:\Qt\Qt5.7.0\5.7\mingw53_32\include\QtQml -IC:\Qt\Qt5.7.0\5.7\mingw53_32\include\QtNetwork -IC:\Qt\Qt5.7.0\5.7\mingw53_32\include\QtCore -Idebug -IC:\Qt\Qt5.7.0\5.7\mingw53_32\mkspecs\win32-g++ 
 LINKER      =        g++
-LFLAGS        =        -Wl,-subsystem,windows -mthreads
+LFLAGS        =        -static-libgcc -static -enable-stdcall-fixup -Wl,-enable-auto-import -Wl,-enable-runtime-pseudo-reloc -Wl,-subsystem,windows -mthreads
 LIBS        =        -lmingw32 -LC:\Qt\Qt5.7.0\5.7\mingw53_32\lib C:\Qt\Qt5.7.0\5.7\mingw53_32\lib\libqtmaind.a -LC:\utils\postgresql\pgsql\lib -LC:\utils\my_sql\my_sql\lib -lshell32 C:\Qt\Qt5.7.0\5.7\mingw53_32\lib\libQt5QuickWidgetsd.a C:\Qt\Qt5.7.0\5.7\mingw53_32\lib\libQt5Quickd.a C:\Qt\Qt5.7.0\5.7\mingw53_32\lib\libQt5Widgetsd.a C:\Qt\Qt5.7.0\5.7\mingw53_32\lib\libQt5Guid.a C:\Qt\Qt5.7.0\5.7\mingw53_32\lib\libQt5SerialPortd.a C:\Qt\Qt5.7.0\5.7\mingw53_32\lib\libQt5Positioningd.a C:\Qt\Qt5.7.0\5.7\mingw53_32\lib\libQt5Sqld.a C:\Qt\Qt5.7.0\5.7\mingw53_32\lib\libQt5Qmld.a C:\Qt\Qt5.7.0\5.7\mingw53_32\lib\libQt5Networkd.a C:\Qt\Qt5.7.0\5.7\mingw53_32\lib\libQt5Cored.a 
 QMAKE         = C:\Qt\Qt5.7.0\5.7\mingw53_32\bin\qmake.exe
 IDC           = idc
@@ -97,7 +97,20 @@ compiler_rcc_clean:
 	-$(DEL_FILE) debug\qrc_resources.cpp
 debug/qrc_resources.cpp: ../GPStracker/resources.qrc \
 		C:/Qt/Qt5.7.0/5.7/mingw53_32/bin/rcc.exe \
-		../GPStracker/main.qml
+		../GPStracker/MapComponent.qml \
+		../GPStracker/MarkerPopupMenu.qml \
+		../GPStracker/nmeadata.txt \
+		../GPStracker/helper.js \
+		../GPStracker/RouteList.qml \
+		../GPStracker/MapPopupMenu.qml \
+		../GPStracker/RouteListHeader.qml \
+		../GPStracker/Marker.qml \
+		../GPStracker/RouteListDelegate.qml \
+		../GPStracker/satellitedata.txt \
+		../GPStracker/resources/scale_end.png \
+		../GPStracker/resources/scale.png \
+		../GPStracker/resources/location.png \
+		../GPStracker/resources/marker.png
 	C:\Qt\Qt5.7.0\5.7\mingw53_32\bin\rcc.exe -name resources ..\GPStracker\resources.qrc -o debug\qrc_resources.cpp
 
 compiler_moc_header_make_all: debug/moc_mainwindow.cpp
@@ -709,6 +722,7 @@ debug/moc_mainwindow.cpp: C:/Qt/Qt5.7.0/5.7/mingw53_32/include/QtSql/QtSql \
 		C:/Qt/Qt5.7.0/5.7/mingw53_32/include/QtQuickWidgets/qtquickwidgetsglobal.h \
 		C:/Qt/Qt5.7.0/5.7/mingw53_32/include/QtQuickWidgets/qtquickwidgetsversion.h \
 		C:/Qt/Qt5.7.0/5.7/mingw53_32/include/QtCore/QProcess \
+		C:/Qt/Qt5.7.0/5.7/mingw53_32/include/QtGui/QMouseEvent \
 		../GPStracker/mainwindow.h \
 		C:/Qt/Qt5.7.0/5.7/mingw53_32/bin/moc.exe
 	C:\Qt\Qt5.7.0\5.7\mingw53_32\bin\moc.exe $(DEFINES) -D__GNUC__ -DWIN32 -IC:/Qt/Qt5.7.0/5.7/mingw53_32/mkspecs/win32-g++ -ID:/Volat/Qt/projects/GPStracker -IC:/Qt/Qt5.7.0/5.7/mingw53_32/include -IC:/Qt/Qt5.7.0/5.7/mingw53_32/include/QtQuickWidgets -IC:/Qt/Qt5.7.0/5.7/mingw53_32/include/QtQuick -IC:/Qt/Qt5.7.0/5.7/mingw53_32/include/QtWidgets -IC:/Qt/Qt5.7.0/5.7/mingw53_32/include/QtGui -IC:/Qt/Qt5.7.0/5.7/mingw53_32/include/QtANGLE -IC:/Qt/Qt5.7.0/5.7/mingw53_32/include/QtSerialPort -IC:/Qt/Qt5.7.0/5.7/mingw53_32/include/QtPositioning -IC:/Qt/Qt5.7.0/5.7/mingw53_32/include/QtSql -IC:/Qt/Qt5.7.0/5.7/mingw53_32/include/QtQml -IC:/Qt/Qt5.7.0/5.7/mingw53_32/include/QtNetwork -IC:/Qt/Qt5.7.0/5.7/mingw53_32/include/QtCore -I. -IC:/Qt/Qt5.7.0/Tools/mingw530_32/lib/gcc/i686-w64-mingw32/5.3.0/include -IC:/Qt/Qt5.7.0/Tools/mingw530_32/lib/gcc/i686-w64-mingw32/5.3.0/include-fixed -IC:/Qt/Qt5.7.0/Tools/mingw530_32/i686-w64-mingw32/include -IC:/Qt/Qt5.7.0/Tools/mingw530_32/i686-w64-mingw32/include/c++ -IC:/Qt/Qt5.7.0/Tools/mingw530_32/i686-w64-mingw32/include/c++/i686-w64-mingw32 -IC:/Qt/Qt5.7.0/Tools/mingw530_32/i686-w64-mingw32/include/c++/backward ..\GPStracker\mainwindow.h -o debug\moc_mainwindow.cpp
@@ -1336,6 +1350,7 @@ debug/main.o: ../GPStracker/main.cpp ../GPStracker/mainwindow.h \
 		C:/Qt/Qt5.7.0/5.7/mingw53_32/include/QtQuickWidgets/qtquickwidgetsglobal.h \
 		C:/Qt/Qt5.7.0/5.7/mingw53_32/include/QtQuickWidgets/qtquickwidgetsversion.h \
 		C:/Qt/Qt5.7.0/5.7/mingw53_32/include/QtCore/QProcess \
+		C:/Qt/Qt5.7.0/5.7/mingw53_32/include/QtGui/QMouseEvent \
 		C:/Qt/Qt5.7.0/5.7/mingw53_32/include/QtWidgets/QApplication
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o debug\main.o ..\GPStracker\main.cpp
 
@@ -1945,7 +1960,8 @@ debug/mainwindow.o: ../GPStracker/mainwindow.cpp ../GPStracker/mainwindow.h \
 		C:/Qt/Qt5.7.0/5.7/mingw53_32/include/QtQuickWidgets/qquickwidget.h \
 		C:/Qt/Qt5.7.0/5.7/mingw53_32/include/QtQuickWidgets/qtquickwidgetsglobal.h \
 		C:/Qt/Qt5.7.0/5.7/mingw53_32/include/QtQuickWidgets/qtquickwidgetsversion.h \
-		C:/Qt/Qt5.7.0/5.7/mingw53_32/include/QtCore/QProcess
+		C:/Qt/Qt5.7.0/5.7/mingw53_32/include/QtCore/QProcess \
+		C:/Qt/Qt5.7.0/5.7/mingw53_32/include/QtGui/QMouseEvent
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o debug\mainwindow.o ..\GPStracker\mainwindow.cpp
 
 debug/qrc_resources.o: debug/qrc_resources.cpp 

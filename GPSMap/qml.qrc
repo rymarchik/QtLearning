@@ -1,0 +1,22 @@
+<RCC>
+    <qresource prefix="/">
+        <file>main.qml</file>
+        <file>map/MapComponent.qml</file>
+        <file>map/Marker.qml</file>
+        <file>menus/MainMenu.qml</file>
+        <file>menus/MapPopupMenu.qml</file>
+        <file>menus/MarkerPopupMenu.qml</file>
+        <file>resources/marker.png</file>
+        <file>resources/scale.png</file>
+        <file>resources/scale_end.png</file>
+        <file>helper.js</file>
+        <file>forms/Message.qml</file>
+        <file>forms/RouteCoordinate.qml</file>
+        <file>forms/RouteList.qml</file>
+        <file>forms/RouteListDelegate.qml</file>
+        <file>forms/RouteListHeader.qml</file>
+        <file>forms/MessageForm.ui.qml</file>
+        <file>forms/RouteCoordinateForm.ui.qml</file>
+        <file>menus/ItemPopupMenu.qml</file>
+    </qresource>
+</RCC>

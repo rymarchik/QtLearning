@@ -1,5 +1,9 @@
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
+#include <QtPlugin>
+
+Q_IMPORT_PLUGIN(QtQuick2Plugin)
+Q_IMPORT_PLUGIN(QtQuick2WindowPlugin)
 
 int main(int argc, char *argv[])
 {

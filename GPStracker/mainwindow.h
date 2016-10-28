@@ -7,6 +7,7 @@
 #include <QtPositioning>
 #include <QtQuickWidgets>
 #include <QProcess>
+#include <QMouseEvent>
 
 class MainWindow : public QWidget
 {

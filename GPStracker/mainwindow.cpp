@@ -13,7 +13,7 @@ MainWindow::MainWindow()
     db.setPort(5432);
     db.open();
 
-    qmlwgt = new QQuickWidget(QUrl("qrc:///main.qml"));
+    qmlwgt = new QQuickWidget(QUrl("qrc:///MapComponent.qml"));
     contxt = qmlwgt->rootContext();
     textEdit = new QTextEdit;
     QVBoxLayout* layout = new QVBoxLayout;
@@ -149,9 +149,9 @@ void MainWindow::parseInput() {
 //    QString insertRow = "INSERT INTO location (id, latitude, longitude, altitude, time)"
 //                         " VALUES (%1, %2, %3, %4, '%5');";
 //    QString str = insertRow.arg(id).arg(latitude).arg(longitude).arg(altitude).arg(time.toString("hh:mm:ss"));
-    QString updateRow = "UPDATE own_forces.combatobject_location SET obj_latitude = %1,"
-                        "obj_longitude = %2, obj_altitude = %3, tid = %4, btime = '%5' WHERE combatobjectid = 1;";
-    QString str = updateRow.arg(latitude).arg(longitude).arg(altitude).arg(id).arg(time.toString("hh:mm:ss"));
+    QString updateRow = "UPDATE own_forces.combatobject_location SET obj_location = "
+                         "ST_SetSRID(ST_MakePoint(%1, %2, %3), 4326), tid = %4, btime = '%5' WHERE combatobjectid = 1;";
+    QString str = updateRow.arg(longitude).arg(latitude).arg(altitude).arg(id).arg(time.toString("hh:mm:ss"));
 
 //    QString deleteRow = "DELETE FROM location WHERE id = 1";
 //    if (id == 11) {
