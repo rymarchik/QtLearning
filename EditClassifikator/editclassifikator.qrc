@@ -1,0 +1,13 @@
+<RCC>
+    <qresource prefix="/EditClassifikator">
+        <file>Resources/AddressBook.ico</file>
+        <file>Resources/8.png</file>
+        <file>Resources/document (2).png</file>
+        <file>Resources/document (1).png</file>
+        <file>Resources/documentedit.png</file>
+        <file>Resources/documentsave.png</file>
+        <file>Resources/out.png</file>
+        <file>Resources/refresh (3).png</file>
+        <file>Resources/oldgobottom.png</file>
+    </qresource>
+</RCC>

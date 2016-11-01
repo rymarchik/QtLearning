@@ -1,0 +1,176 @@
+========================================================================
+       MICROSOFT FOUNDATION CLASS LIBRARY : A200FireControl
+========================================================================
+
+
+AppWizard создал это приложение A200FireControl для вас. Это приложение
+не только демонстрирует основы использования классов Microsoft Foundation
+но также является отправной точкой для написания приложения.
+
+Этот файл содержит краткое описание того, что вы найдете в каждом из файлов,
+составляют приложение A200FireControl.
+
+A200FireControl.dsp
+    Этот файл (файл проекта) содержит информацию на уровне проекта и
+    используется для создания отдельного проекта или подпроекта. Другие пользователи могут поделиться
+    Файл проекта (.dsp), но они должны экспортировать мейкфайлы локально.
+
+A200FireControl.h
+    Это главный файл заголовка для приложения. Она включает в себя другое
+    специфические для данного проекта заголовки (включая resource.h) и объявляет
+    CA200FireControlApp класс приложения.
+
+A200FireControl.cpp
+    Это основной исходный код приложения файл, который содержит приложение
+    Класс CA200FireControlApp.
+
+A200FireControl.rc
+    Это список всех ресурсов Microsoft Windows, что
+    Программа использует. Она включает в себя иконки, растровые изображения и курсоры, которые хранятся
+    в подкаталоге RES. Этот файл можно редактировать непосредственно в Microsoft
+Visual C ++.
+
+A200FireControl.clw
+    Этот файл содержит информацию, используемую ClassWizard для редактирования существующих
+    классы или добавить новые классы. ClassWizard также использует этот файл для хранения
+    информация, необходимая для создания и редактирования карты сообщения и диалоговые данные
+    карты и создать функции-члены прототипа.
+
+Рез \ A200FireControl.ico
+    Это файл значок, который используется в качестве значка приложения. Эта
+    значок включен в основной файл ресурса A200FireControl.rc.
+
+Рез \ A200FireControl.rc2
+    Этот файл содержит ресурсы, которые не отредактированные Microsoft
+Visual C ++. Вы должны поместить все ресурсы, не с возможностью их редактирования
+редактор ресурсов в этом файле.
+
+
+/////////////////////////////////////////////////////////////////////////////
+
+AppWizard создает один класс диалогового окна:
+
+A200FireControlDlg.h, A200FireControlDlg.cpp - диалог
+     Эти файлы содержат свой класс CA200FireControlDlg. Этот класс определяет
+     поведение главного диалогового окна приложения. В Диалог
+     шаблон в A200FireControl.rc, который можно редактировать в Microsoft
+Visual C ++.
+
+
+/////////////////////////////////////////////////////////////////////////////
+Другие стандартные файлы:
+
+Stdafx.h, stdafx.cpp
+     Эти файлы используются для создания предкомпилированного заголовка файла (PCH)
+     названный A200FireControl.pch и скомпилированных типы файлов с именем StdAfx.obj.
+
+resource.h
+     Это стандартный файл заголовка, который определяет новые идентификаторы ресурсов.
+     Microsoft Visual C ++ считывает и обновляет этот файл.
+
+/////////////////////////////////////////////////////////////////////////////
+Другие примечания:
+
+AppWizard использует "TODO:" для обозначения части исходного кода,
+следует добавить или изменить.
+
+Если ваше приложение использует MFC в общей библиотеке DLL, и ваше приложение
+на языке, отличном от текущего языка операционной системы, вы
+необходимо скопировать соответствующие локализованные ресурсы MFC42XXX.DLL
+из Visual C CD-ROM Microsoft ++ в систему или директории system32,
+и переименовать его, чтобы быть MFCLOC.DLL. ("XXX" обозначает аббревиатура языка.
+Например, MFC42DEU.DLL содержит ресурсы, переведенные на немецкий язык.) Если вы
+не делают этого, некоторые из элементов пользовательского интерфейса вашего приложения будет оставаться в
+язык операционной системы.
+/////////////////////////////////////////////////////////////////////////////
+
+
+
+========================================================================
+       MICROSOFT FOUNDATION CLASS LIBRARY : A200FireControl
+========================================================================
+
+
+AppWizard has created this A200FireControl application for you.  This application
+not only demonstrates the basics of using the Microsoft Foundation classes
+but is also a starting point for writing your application.
+
+This file contains a summary of what you will find in each of the files that
+make up your A200FireControl application.
+
+A200FireControl.dsp
+    This file (the project file) contains information at the project level and
+    is used to build a single project or subproject. Other users can share the
+    project (.dsp) file, but they should export the makefiles locally.
+
+A200FireControl.h
+    This is the main header file for the application.  It includes other
+    project specific headers (including Resource.h) and declares the
+    CA200FireControlApp application class.
+
+A200FireControl.cpp
+    This is the main application source file that contains the application
+    class CA200FireControlApp.
+
+A200FireControl.rc
+    This is a listing of all of the Microsoft Windows resources that the
+    program uses.  It includes the icons, bitmaps, and cursors that are stored
+    in the RES subdirectory.  This file can be directly edited in Microsoft
+	Visual C++.
+
+A200FireControl.clw
+    This file contains information used by ClassWizard to edit existing
+    classes or add new classes.  ClassWizard also uses this file to store
+    information needed to create and edit message maps and dialog data
+    maps and to create prototype member functions.
+
+res\A200FireControl.ico
+    This is an icon file, which is used as the application's icon.  This
+    icon is included by the main resource file A200FireControl.rc.
+
+res\A200FireControl.rc2
+    This file contains resources that are not edited by Microsoft 
+	Visual C++.  You should place all resources not editable by
+	the resource editor in this file.
+
+
+
+
+/////////////////////////////////////////////////////////////////////////////
+
+AppWizard creates one dialog class:
+
+A200FireControlDlg.h, A200FireControlDlg.cpp - the dialog
+    These files contain your CA200FireControlDlg class.  This class defines
+    the behavior of your application's main dialog.  The dialog's
+    template is in A200FireControl.rc, which can be edited in Microsoft
+	Visual C++.
+
+
+/////////////////////////////////////////////////////////////////////////////
+Other standard files:
+
+StdAfx.h, StdAfx.cpp
+    These files are used to build a precompiled header (PCH) file
+    named A200FireControl.pch and a precompiled types file named StdAfx.obj.
+
+Resource.h
+    This is the standard header file, which defines new resource IDs.
+    Microsoft Visual C++ reads and updates this file.
+
+/////////////////////////////////////////////////////////////////////////////
+Other notes:
+
+AppWizard uses "TODO:" to indicate parts of the source code you
+should add to or customize.
+
+If your application uses MFC in a shared DLL, and your application is 
+in a language other than the operating system's current language, you
+will need to copy the corresponding localized resources MFC42XXX.DLL
+from the Microsoft Visual C++ CD-ROM onto the system or system32 directory,
+and rename it to be MFCLOC.DLL.  ("XXX" stands for the language abbreviation.
+For example, MFC42DEU.DLL contains resources translated to German.)  If you
+don't do this, some of the UI elements of your application will remain in the
+language of the operating system.
+
+/////////////////////////////////////////////////////////////////////////////

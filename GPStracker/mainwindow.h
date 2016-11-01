@@ -5,7 +5,7 @@
 #include <QtWidgets>
 #include <QtSerialPort/QSerialPort>
 #include <QtPositioning>
-#include <QtQuickWidgets>
+//#include <QtQuickWidgets>
 #include <QProcess>
 #include <QMouseEvent>
 
@@ -19,8 +19,8 @@ private:
     QSqlDatabase db;
     QSerialPort* serial;
 
-    QQuickWidget* qmlwgt;
-    QQmlContext* contxt;
+//    QQuickWidget* qmlwgt;
+//    QQmlContext* contxt;
     QTextEdit* textEdit;
 
     QComboBox* portName;

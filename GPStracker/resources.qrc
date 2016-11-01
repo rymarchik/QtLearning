@@ -2,17 +2,5 @@
     <qresource prefix="/">
         <file>nmeadata.txt</file>
         <file>satellitedata.txt</file>
-        <file>helper.js</file>
-        <file>resources/scale.png</file>
-        <file>resources/scale_end.png</file>
-        <file>MapPopupMenu.qml</file>
-        <file>Marker.qml</file>
-        <file>MarkerPopupMenu.qml</file>
-        <file>MapComponent.qml</file>
-        <file>resources/location.png</file>
-        <file>resources/marker.png</file>
-        <file>RouteList.qml</file>
-        <file>RouteListDelegate.qml</file>
-        <file>RouteListHeader.qml</file>
     </qresource>
 </RCC>

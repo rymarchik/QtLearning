@@ -4,7 +4,8 @@
 #
 #-------------------------------------------------
 
-QT       += core gui serialport positioning sql quick qml quickwidgets
+QT       += core gui serialport positioning sql
+#QT += quick qml quickwidgets
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 

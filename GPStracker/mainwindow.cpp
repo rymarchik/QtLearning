@@ -13,11 +13,11 @@ MainWindow::MainWindow()
     db.setPort(5432);
     db.open();
 
-    qmlwgt = new QQuickWidget(QUrl("qrc:///MapComponent.qml"));
-    contxt = qmlwgt->rootContext();
+//    qmlwgt = new QQuickWidget(QUrl("qrc:///MapComponent.qml"));
+//    contxt = qmlwgt->rootContext();
     textEdit = new QTextEdit;
     QVBoxLayout* layout = new QVBoxLayout;
-    layout->addWidget(qmlwgt);
+//    layout->addWidget(qmlwgt);
     layout->addWidget(textEdit);
 
     portName = new QComboBox;
@@ -143,8 +143,8 @@ void MainWindow::parseInput() {
                       QString::number(latitude) + "\tДолгота: " + QString::number(longitude) +
                       "\tВысота над уровнем моря: " + QString::number(altitude));
 
-    contxt->setContextProperty("myLatitude", latitude);
-    contxt->setContextProperty("myLongitude", longitude);
+//    contxt->setContextProperty("myLatitude", latitude);
+//    contxt->setContextProperty("myLongitude", longitude);
 
 //    QString insertRow = "INSERT INTO location (id, latitude, longitude, altitude, time)"
 //                         " VALUES (%1, %2, %3, %4, '%5');";

@@ -1,0 +1,355 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="windowModality">
+   <enum>Qt::WindowModal</enum>
+  </property>
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>915</width>
+    <height>580</height>
+   </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>0</width>
+    <height>0</height>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>16777215</width>
+    <height>16777215</height>
+   </size>
+  </property>
+  <property name="windowTitle">
+   <string>Классификатор</string>
+  </property>
+  <property name="windowIcon">
+   <iconset resource="editclassifikator.qrc">
+    <normaloff>:/EditClassifikator/Resources/AddressBook.ico</normaloff>:/EditClassifikator/Resources/AddressBook.ico</iconset>
+  </property>
+  <widget class="QWidget" name="centralWidget">
+   <property name="minimumSize">
+    <size>
+     <width>915</width>
+     <height>472</height>
+    </size>
+   </property>
+   <layout class="QGridLayout" name="gridLayout">
+    <item row="0" column="0">
+     <widget class="QTreeWidget" name="treeWidget">
+      <property name="enabled">
+       <bool>true</bool>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>16777000</width>
+        <height>16777000</height>
+       </size>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>11</pointsize>
+       </font>
+      </property>
+      <property name="acceptDrops">
+       <bool>false</bool>
+      </property>
+      <property name="layoutDirection">
+       <enum>Qt::LeftToRight</enum>
+      </property>
+      <property name="autoFillBackground">
+       <bool>true</bool>
+      </property>
+      <property name="inputMethodHints">
+       <set>Qt::ImhNone</set>
+      </property>
+      <property name="frameShape">
+       <enum>QFrame::NoFrame</enum>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Sunken</enum>
+      </property>
+      <property name="lineWidth">
+       <number>3</number>
+      </property>
+      <property name="midLineWidth">
+       <number>0</number>
+      </property>
+      <property name="sizeAdjustPolicy">
+       <enum>QAbstractScrollArea::AdjustToContentsOnFirstShow</enum>
+      </property>
+      <property name="showDropIndicator" stdset="0">
+       <bool>true</bool>
+      </property>
+      <property name="alternatingRowColors">
+       <bool>true</bool>
+      </property>
+      <property name="selectionMode">
+       <enum>QAbstractItemView::SingleSelection</enum>
+      </property>
+      <property name="selectionBehavior">
+       <enum>QAbstractItemView::SelectRows</enum>
+      </property>
+      <property name="iconSize">
+       <size>
+        <width>10</width>
+        <height>10</height>
+       </size>
+      </property>
+      <property name="textElideMode">
+       <enum>Qt::ElideMiddle</enum>
+      </property>
+      <property name="verticalScrollMode">
+       <enum>QAbstractItemView::ScrollPerItem</enum>
+      </property>
+      <property name="horizontalScrollMode">
+       <enum>QAbstractItemView::ScrollPerItem</enum>
+      </property>
+      <property name="autoExpandDelay">
+       <number>1</number>
+      </property>
+      <property name="indentation">
+       <number>40</number>
+      </property>
+      <property name="rootIsDecorated">
+       <bool>true</bool>
+      </property>
+      <property name="uniformRowHeights">
+       <bool>false</bool>
+      </property>
+      <property name="itemsExpandable">
+       <bool>true</bool>
+      </property>
+      <property name="sortingEnabled">
+       <bool>true</bool>
+      </property>
+      <property name="animated">
+       <bool>false</bool>
+      </property>
+      <property name="allColumnsShowFocus">
+       <bool>true</bool>
+      </property>
+      <property name="wordWrap">
+       <bool>false</bool>
+      </property>
+      <property name="headerHidden">
+       <bool>false</bool>
+      </property>
+      <property name="columnCount">
+       <number>3</number>
+      </property>
+      <attribute name="headerVisible">
+       <bool>false</bool>
+      </attribute>
+      <attribute name="headerCascadingSectionResizes">
+       <bool>true</bool>
+      </attribute>
+      <attribute name="headerHighlightSections">
+       <bool>false</bool>
+      </attribute>
+      <attribute name="headerMinimumSectionSize">
+       <number>100</number>
+      </attribute>
+      <attribute name="headerShowSortIndicator" stdset="0">
+       <bool>true</bool>
+      </attribute>
+      <attribute name="headerStretchLastSection">
+       <bool>true</bool>
+      </attribute>
+      <column>
+       <property name="text">
+        <string>1</string>
+       </property>
+       <property name="font">
+        <font>
+         <weight>75</weight>
+         <bold>true</bold>
+         <stylestrategy>PreferDefault</stylestrategy>
+         <kerning>true</kerning>
+        </font>
+       </property>
+       <property name="textAlignment">
+        <set>AlignLeading|AlignVCenter</set>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>2</string>
+       </property>
+       <property name="font">
+        <font>
+         <weight>75</weight>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="textAlignment">
+        <set>AlignJustify|AlignVCenter</set>
+       </property>
+       <property name="foreground">
+        <brush brushstyle="SolidPattern">
+         <color alpha="255">
+          <red>0</red>
+          <green>0</green>
+          <blue>0</blue>
+         </color>
+        </brush>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>3</string>
+       </property>
+       <property name="font">
+        <font>
+         <weight>75</weight>
+         <bold>true</bold>
+         <kerning>false</kerning>
+        </font>
+       </property>
+      </column>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QToolBar" name="mainToolBar">
+   <property name="layoutDirection">
+    <enum>Qt::LeftToRight</enum>
+   </property>
+   <property name="movable">
+    <bool>true</bool>
+   </property>
+   <property name="allowedAreas">
+    <set>Qt::AllToolBarAreas</set>
+   </property>
+   <property name="orientation">
+    <enum>Qt::Horizontal</enum>
+   </property>
+   <property name="iconSize">
+    <size>
+     <width>40</width>
+     <height>40</height>
+    </size>
+   </property>
+   <property name="toolButtonStyle">
+    <enum>Qt::ToolButtonTextUnderIcon</enum>
+   </property>
+   <property name="floatable">
+    <bool>false</bool>
+   </property>
+   <attribute name="toolBarArea">
+    <enum>TopToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak">
+    <bool>false</bool>
+   </attribute>
+   <addaction name="separator"/>
+   <addaction name="m_Add"/>
+   <addaction name="m_Edit"/>
+   <addaction name="m_Delete"/>
+   <addaction name="separator"/>
+   <addaction name="m_Save"/>
+   <addaction name="separator"/>
+   <addaction name="m_Find"/>
+   <addaction name="separator"/>
+   <addaction name="m_Import"/>
+   <addaction name="separator"/>
+   <addaction name="m_Refresh"/>
+   <addaction name="m_Exit"/>
+  </widget>
+  <widget class="QStatusBar" name="statusBar"/>
+  <action name="m_Find">
+   <property name="icon">
+    <iconset resource="editclassifikator.qrc">
+     <normaloff>:/EditClassifikator/Resources/8.png</normaloff>:/EditClassifikator/Resources/8.png</iconset>
+   </property>
+   <property name="text">
+    <string>Поиск</string>
+   </property>
+  </action>
+  <action name="m_Add">
+   <property name="icon">
+    <iconset resource="editclassifikator.qrc">
+     <normaloff>:/EditClassifikator/Resources/document (2).png</normaloff>:/EditClassifikator/Resources/document (2).png</iconset>
+   </property>
+   <property name="text">
+    <string>Добавить</string>
+   </property>
+   <property name="toolTip">
+    <string>Добавить</string>
+   </property>
+  </action>
+  <action name="m_Delete">
+   <property name="icon">
+    <iconset resource="editclassifikator.qrc">
+     <normaloff>:/EditClassifikator/Resources/document (1).png</normaloff>:/EditClassifikator/Resources/document (1).png</iconset>
+   </property>
+   <property name="text">
+    <string>Удалить</string>
+   </property>
+  </action>
+  <action name="m_Save">
+   <property name="icon">
+    <iconset resource="editclassifikator.qrc">
+     <normaloff>:/EditClassifikator/Resources/documentsave.png</normaloff>:/EditClassifikator/Resources/documentsave.png</iconset>
+   </property>
+   <property name="text">
+    <string>Сохранить</string>
+   </property>
+  </action>
+  <action name="m_Refresh">
+   <property name="icon">
+    <iconset resource="editclassifikator.qrc">
+     <normaloff>:/EditClassifikator/Resources/refresh (3).png</normaloff>:/EditClassifikator/Resources/refresh (3).png</iconset>
+   </property>
+   <property name="text">
+    <string>Обновить</string>
+   </property>
+  </action>
+  <action name="m_Edit">
+   <property name="icon">
+    <iconset resource="editclassifikator.qrc">
+     <normaloff>:/EditClassifikator/Resources/documentedit.png</normaloff>:/EditClassifikator/Resources/documentedit.png</iconset>
+   </property>
+   <property name="text">
+    <string>Изменить</string>
+   </property>
+   <property name="toolTip">
+    <string>Изменить</string>
+   </property>
+  </action>
+  <action name="m_Exit">
+   <property name="icon">
+    <iconset resource="editclassifikator.qrc">
+     <normaloff>:/EditClassifikator/Resources/out.png</normaloff>:/EditClassifikator/Resources/out.png</iconset>
+   </property>
+   <property name="text">
+    <string>Выход</string>
+   </property>
+   <property name="toolTip">
+    <string>Выход</string>
+   </property>
+  </action>
+  <action name="m_Import">
+   <property name="icon">
+    <iconset resource="editclassifikator.qrc">
+     <normaloff>:/EditClassifikator/Resources/oldgobottom.png</normaloff>:/EditClassifikator/Resources/oldgobottom.png</iconset>
+   </property>
+   <property name="text">
+    <string>Импорт</string>
+   </property>
+   <property name="toolTip">
+    <string>Импорт</string>
+   </property>
+  </action>
+ </widget>
+ <layoutdefault spacing="6" margin="11"/>
+ <resources>
+  <include location="editclassifikator.qrc"/>
+ </resources>
+ <connections/>
+</ui>
