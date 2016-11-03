@@ -16,15 +16,19 @@ private:
     QAction* addAction;
     QAction* editAction;
     QAction* deleteAction;
-    QAction* saveAction;
     QAction* searchAction;
-    QAction* refreshAction;
+    QAction* uploadAction;
+    QAction* downloadAction;
     QAction* exitAction;
 
     QWidget* window;
     QListWidget* directory;
-    QTableWidget* dataTable;
     QTableWidget* hiddenDataTable;
+    QTableWidget* dataTable;
+    QHeaderView* header;
+
+private slots:
+    void showDirectoryInfo(QListWidgetItem* item);
 };
 
 #endif // EDITOR_H

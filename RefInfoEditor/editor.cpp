@@ -13,16 +13,17 @@ Editor::Editor(QWidget *parent) :
     addAction = new QAction(QIcon(":/resources/add.png"), "Добавить");
     editAction = new QAction(QIcon(":/resources/edit.png"), "Изменить");
     deleteAction = new QAction(QIcon(":/resources/delete.png"), "Удалить");
-    saveAction = new QAction(QIcon(":/resources/save.png"), "Сохранить");
     searchAction = new QAction(QIcon(":/resources/search.png"), "Поиск");
-    refreshAction = new QAction(QIcon(":/resources/refresh.png"), "Обновить");
+    uploadAction = new QAction(QIcon(":/resources/upload.png"), "Сохранить");
+    downloadAction = new QAction(QIcon(":/resources/download.png"), "Загрузить");
     exitAction = new QAction(QIcon(":/resources/exit.png"), "Выход");
     tools->addAction(addAction);
     tools->addAction(editAction);
     tools->addAction(deleteAction);
-    tools->addAction(saveAction);
     tools->addAction(searchAction);
-    tools->addAction(refreshAction);
+    tools->addSeparator();
+    tools->addAction(uploadAction);
+    tools->addAction(downloadAction);
     tools->addSeparator();
     tools->addAction(exitAction);
 
@@ -30,9 +31,14 @@ Editor::Editor(QWidget *parent) :
     directory->setMaximumWidth(this->width()/4);
 
     hiddenDataTable = new QTableWidget;
-//    hiddenDataTable->setHidden(true);
+    hiddenDataTable->setHidden(true);
     hiddenDataTable->setMaximumHeight(this->height()/4);
+    hiddenDataTable->verticalHeader()->setVisible(false);
+
     dataTable = new QTableWidget;
+    header = dataTable->horizontalHeader();
+    dataTable->verticalHeader()->setVisible(false);
+
     QVBoxLayout* dataLayout = new QVBoxLayout;
     dataLayout->addWidget(hiddenDataTable);
     dataLayout->addWidget(dataTable);
@@ -55,7 +61,7 @@ Editor::Editor(QWidget *parent) :
         dirItem->setTextAlignment(Qt::AlignCenter);
     }
 
-
+    connect(directory, SIGNAL(itemClicked(QListWidgetItem*)), this, SLOT(showDirectoryInfo(QListWidgetItem*)));
 
 
     setCentralWidget(window);
@@ -64,3 +70,99 @@ Editor::Editor(QWidget *parent) :
 
     connect(exitAction, SIGNAL(triggered()), qApp, SLOT(quit()));
 }
+
+void Editor::showDirectoryInfo(QListWidgetItem* dirItem) {
+    if (dirItem == directory->item(0)) {
+        hiddenDataTable->setHidden(true);
+
+        dataTable->clear();
+        dataTable->setColumnCount(4);
+        dataTable->setRowCount(10);
+
+        QStringList headerNames;
+        headerNames << "Тип БЧ ракеты" << "Радиус поражения, м" << "СКО по дальности, м" << "СКО боковое, м";
+        dataTable->setHorizontalHeaderLabels(headerNames);
+
+        dataTable->setItem(0,0,new QTableWidgetItem("qwerty123456qwerty1234 56qwerty123456"));
+
+
+        header->setSectionResizeMode(QHeaderView::Stretch);
+        header->setSectionResizeMode(header->logicalIndexAt(0), QHeaderView::ResizeToContents);
+        qDebug() << header->logicalIndexAt(0);
+    }
+    else if (dirItem == directory->item(1)) {
+        hiddenDataTable->setHidden(true);
+
+        dataTable->clear();
+        dataTable->setColumnCount(2);
+        dataTable->setRowCount(10);
+
+        QStringList headerNames;
+        headerNames << "Наименование степени поражения" << "Значение степени поражения";
+        dataTable->setHorizontalHeaderLabels(headerNames);
+
+        dataTable->setItem(0,0,new QTableWidgetItem("qwerty123456qwerty1234 56qwerty123456"));
+
+
+        header->setSectionResizeMode(QHeaderView::Stretch);
+        header->setSectionResizeMode(header->logicalIndexAt(0), QHeaderView::ResizeToContents);
+        qDebug() << header->logicalIndexAt(0);
+    }
+    else if (dirItem == directory->item(2)) {
+        hiddenDataTable->setHidden(true);
+
+        dataTable->clear();
+        dataTable->setColumnCount(4);
+        dataTable->setRowCount(10);
+
+        QStringList headerNames;
+        headerNames << "Наименование объекта поражения" << "Наименование степени поражения"
+                    << "Тип БЧ ракеты" << "Количество";
+        dataTable->setHorizontalHeaderLabels(headerNames);
+
+        dataTable->setItem(0,0,new QTableWidgetItem("qwerty123456qwerty1234 56qwerty123456"));
+
+
+        header->setSectionResizeMode(QHeaderView::Stretch);
+        header->setSectionResizeMode(header->logicalIndexAt(0), QHeaderView::ResizeToContents);
+        qDebug() << header->logicalIndexAt(0);
+    }
+    else if (dirItem == directory->item(3)) {
+        hiddenDataTable->setHidden(true);
+
+        dataTable->clear();
+        dataTable->setColumnCount(3);
+        dataTable->setRowCount(10);
+
+        QStringList headerNames;
+        headerNames << "Наименование цели" << "Фронт, м" << "Глубина, м";
+        dataTable->setHorizontalHeaderLabels(headerNames);
+
+        dataTable->setItem(0,0,new QTableWidgetItem("qwerty123456qwerty1234 56qwerty123456"));
+
+
+        header->setSectionResizeMode(QHeaderView::Stretch);
+        header->setSectionResizeMode(header->logicalIndexAt(0), QHeaderView::ResizeToContents);
+        qDebug() << header->logicalIndexAt(0);
+    }
+    else if (dirItem == directory->item(4)) {
+        hiddenDataTable->setHidden(false);
+//mesto ostanovki
+        dataTable->clear();
+        dataTable->setColumnCount(4);
+        dataTable->setRowCount(10);
+
+        QStringList headerNames;
+        headerNames << "Дальность до цели, км" << "Угол пуска, град" << "Время полета, с"
+                    << "Максимальная высота траектории, м";
+        dataTable->setHorizontalHeaderLabels(headerNames);
+
+        dataTable->setItem(0,0,new QTableWidgetItem("qwerty123456qwerty1234 56qwerty123456"));
+
+
+        header->setSectionResizeMode(QHeaderView::Stretch);
+        header->setSectionResizeMode(header->logicalIndexAt(0), QHeaderView::ResizeToContents);
+        qDebug() << header->logicalIndexAt(0);
+    }
+}
+

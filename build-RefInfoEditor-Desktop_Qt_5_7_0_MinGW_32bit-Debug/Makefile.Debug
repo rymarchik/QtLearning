@@ -97,13 +97,14 @@ compiler_rcc_clean:
 	-$(DEL_FILE) debug\qrc_resources.cpp
 debug/qrc_resources.cpp: ../RefInfoEditor/resources.qrc \
 		C:/Qt/5.7/mingw53_32/bin/rcc.exe \
+		../RefInfoEditor/resources/download.png \
 		../RefInfoEditor/resources/save.png \
+		../RefInfoEditor/resources/upload.png \
 		../RefInfoEditor/resources/edit.png \
 		../RefInfoEditor/resources/add.png \
 		../RefInfoEditor/resources/search.png \
 		../RefInfoEditor/resources/exit.png \
 		../RefInfoEditor/resources/delete.png \
-		../RefInfoEditor/resources/load.png \
 		../RefInfoEditor/resources/refresh.png \
 		../RefInfoEditor/resources/title.png
 	C:\Qt\5.7\mingw53_32\bin\rcc.exe -name resources ..\RefInfoEditor\resources.qrc -o debug\qrc_resources.cpp

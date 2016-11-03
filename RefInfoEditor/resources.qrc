@@ -2,12 +2,13 @@
     <qresource prefix="/">
         <file>resources/edit.png</file>
         <file>resources/exit.png</file>
-        <file>resources/load.png</file>
         <file>resources/refresh.png</file>
         <file>resources/save.png</file>
         <file>resources/title.png</file>
         <file>resources/add.png</file>
         <file>resources/delete.png</file>
         <file>resources/search.png</file>
+        <file>resources/download.png</file>
+        <file>resources/upload.png</file>
     </qresource>
 </RCC>
