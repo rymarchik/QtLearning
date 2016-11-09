@@ -33,11 +33,22 @@ Editor::Editor(QWidget *parent) :
     hiddenDataTable = new QTableWidget;
     hiddenDataTable->setHidden(true);
     hiddenDataTable->setMaximumHeight(this->height()/4);
+    hiddenDataTable->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+    hiddenDataTable->horizontalHeader()->setFrameShape(QFrame::StyledPanel);
+    hiddenDataTable->horizontalHeader()->setFrameShadow(QFrame::Raised);
     hiddenDataTable->verticalHeader()->setVisible(false);
+    hiddenDataTable->setEditTriggers(QAbstractItemView::NoEditTriggers);
+    hiddenDataTable->setShowGrid(false);
 
     dataTable = new QTableWidget;
     header = dataTable->horizontalHeader();
+    header->setFrameShape(QFrame::StyledPanel);
+    header->setFrameShadow(QFrame::Raised);
     dataTable->verticalHeader()->setVisible(false);
+    dataTable->setEditTriggers(QAbstractItemView::NoEditTriggers);
+    dataTable->setSelectionBehavior(QAbstractItemView::SelectRows);
+    dataTable->setShowGrid(false);
+
 
     QVBoxLayout* dataLayout = new QVBoxLayout;
     dataLayout->addWidget(hiddenDataTable);
@@ -63,7 +74,6 @@ Editor::Editor(QWidget *parent) :
 
     connect(directory, SIGNAL(itemClicked(QListWidgetItem*)), this, SLOT(showDirectoryInfo(QListWidgetItem*)));
 
-
     setCentralWidget(window);
     setWindowIcon(QIcon(":/resources/title.png"));
     setWindowTitle("Редактор нормативно-справочной информации");
@@ -85,10 +95,8 @@ void Editor::showDirectoryInfo(QListWidgetItem* dirItem) {
 
         dataTable->setItem(0,0,new QTableWidgetItem("qwerty123456qwerty1234 56qwerty123456"));
 
-
         header->setSectionResizeMode(QHeaderView::Stretch);
-        header->setSectionResizeMode(header->logicalIndexAt(0), QHeaderView::ResizeToContents);
-        qDebug() << header->logicalIndexAt(0);
+//        header->setSectionResizeMode(header->logicalIndex(0), QHeaderView::ResizeToContents);
     }
     else if (dirItem == directory->item(1)) {
         hiddenDataTable->setHidden(true);
@@ -101,12 +109,9 @@ void Editor::showDirectoryInfo(QListWidgetItem* dirItem) {
         headerNames << "Наименование степени поражения" << "Значение степени поражения";
         dataTable->setHorizontalHeaderLabels(headerNames);
 
-        dataTable->setItem(0,0,new QTableWidgetItem("qwerty123456qwerty1234 56qwerty123456"));
-
+        dataTable->setItem(2,0,new QTableWidgetItem("qwerty123456qwerty1234 56qwert"));
 
         header->setSectionResizeMode(QHeaderView::Stretch);
-        header->setSectionResizeMode(header->logicalIndexAt(0), QHeaderView::ResizeToContents);
-        qDebug() << header->logicalIndexAt(0);
     }
     else if (dirItem == directory->item(2)) {
         hiddenDataTable->setHidden(true);
@@ -120,12 +125,9 @@ void Editor::showDirectoryInfo(QListWidgetItem* dirItem) {
                     << "Тип БЧ ракеты" << "Количество";
         dataTable->setHorizontalHeaderLabels(headerNames);
 
-        dataTable->setItem(0,0,new QTableWidgetItem("qwerty123456qwerty1234 56qwerty123456"));
-
+        dataTable->setItem(0,0,new QTableWidgetItem("qwerty123456qwerty1234fffffffffffffffffffgsgsgsgsg"));
 
         header->setSectionResizeMode(QHeaderView::Stretch);
-        header->setSectionResizeMode(header->logicalIndexAt(0), QHeaderView::ResizeToContents);
-        qDebug() << header->logicalIndexAt(0);
     }
     else if (dirItem == directory->item(3)) {
         hiddenDataTable->setHidden(true);
@@ -142,27 +144,43 @@ void Editor::showDirectoryInfo(QListWidgetItem* dirItem) {
 
 
         header->setSectionResizeMode(QHeaderView::Stretch);
-        header->setSectionResizeMode(header->logicalIndexAt(0), QHeaderView::ResizeToContents);
-        qDebug() << header->logicalIndexAt(0);
     }
     else if (dirItem == directory->item(4)) {
         hiddenDataTable->setHidden(false);
-//mesto ostanovki
+        hiddenDataTable->setColumnCount(1);
+        hiddenDataTable->setRowCount(5);
+        hiddenDataTable->setHorizontalHeaderLabels(QStringList("Высота БМ, м"));
+
+        hiddenDataTable->setItem(0,0,new QTableWidgetItem("1000"));
+
+
         dataTable->clear();
-        dataTable->setColumnCount(4);
+        dataTable->setColumnCount(9);
         dataTable->setRowCount(10);
 
         QStringList headerNames;
         headerNames << "Дальность до цели, км" << "Угол пуска, град" << "Время полета, с"
-                    << "Максимальная высота траектории, м";
+                    << "Максимальная высота\n траектории, м" << "Место падения двигателя\n по умолчанию, м"
+                    << "Минимальное расстояние места\n падения двигателя, м"
+                    << "Максимальное расстояние места\n падения двигателя, м"
+                    << "Минимальное время\n разделения, с" << "Максимальное время\n разделения, с";
         dataTable->setHorizontalHeaderLabels(headerNames);
 
-        dataTable->setItem(0,0,new QTableWidgetItem("qwerty123456qwerty1234 56qwerty123456"));
+        dataTable->setItem(0,0,new QTableWidgetItem("qwerty123456 7890090909"));
 
 
         header->setSectionResizeMode(QHeaderView::Stretch);
-        header->setSectionResizeMode(header->logicalIndexAt(0), QHeaderView::ResizeToContents);
-        qDebug() << header->logicalIndexAt(0);
+        header->setSectionResizeMode(header->logicalIndex(0), QHeaderView::ResizeToContents);
+//        header->setSectionResizeMode(header->logicalIndex(1), QHeaderView::ResizeToContents);
+//        header->setSectionResizeMode(header->logicalIndex(2), QHeaderView::ResizeToContents);
+        header->setSectionResizeMode(header->logicalIndex(3), QHeaderView::ResizeToContents);
+        header->setSectionResizeMode(header->logicalIndex(4), QHeaderView::ResizeToContents);
+        header->setSectionResizeMode(header->logicalIndex(5), QHeaderView::ResizeToContents);
+        header->setSectionResizeMode(header->logicalIndex(6), QHeaderView::ResizeToContents);
+        header->setSectionResizeMode(header->logicalIndex(7), QHeaderView::ResizeToContents);
+        header->setSectionResizeMode(header->logicalIndex(8), QHeaderView::ResizeToContents);
+
+        qDebug() << header->logicalIndex(0) << header->logicalIndex(1) << header->logicalIndex(2)
+                 << header->logicalIndex(3) << header->logicalIndex(4);
     }
 }
-
