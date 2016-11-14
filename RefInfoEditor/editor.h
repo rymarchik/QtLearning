@@ -4,12 +4,18 @@
 #include <QMainWindow>
 #include <QtWidgets>
 
+class Dialog;
+
 class Editor : public QMainWindow
 {
     Q_OBJECT
 
 public:
     explicit Editor(QWidget *parent = 0);
+
+    QStringList getHeaderNames();
+    QStringList getRootItemValues();
+    QStringList getItemValues();
 
 private:
     QToolBar* tools;
@@ -27,8 +33,12 @@ private:
     QTableWidget* dataTable;
     QHeaderView* header;
 
+    Dialog* dialog;
+
 private slots:
     void showDirectoryInfo(QListWidgetItem* item);
+    void slotAdd();
+    void slotEdit();
 };
 
 #endif // EDITOR_H

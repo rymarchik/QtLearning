@@ -1,7 +1,9 @@
 #include "editor.h"
+#include "dialog.h"
 
 Editor::Editor(QWidget *parent) :
-    QMainWindow(parent)
+    QMainWindow(parent),
+    dialog(new Dialog(this))
 {
     resize(915, 580);
 
@@ -78,6 +80,8 @@ Editor::Editor(QWidget *parent) :
     setWindowIcon(QIcon(":/resources/title.png"));
     setWindowTitle("Редактор нормативно-справочной информации");
 
+    connect(addAction, SIGNAL(triggered()), this, SLOT(slotAdd()));
+    connect(editAction, SIGNAL(triggered()), this, SLOT(slotEdit()));
     connect(exitAction, SIGNAL(triggered()), qApp, SLOT(quit()));
 }
 
@@ -87,13 +91,24 @@ void Editor::showDirectoryInfo(QListWidgetItem* dirItem) {
 
         dataTable->clear();
         dataTable->setColumnCount(4);
-        dataTable->setRowCount(10);
+        dataTable->setRowCount(3);
 
         QStringList headerNames;
         headerNames << "Тип БЧ ракеты" << "Радиус поражения, м" << "СКО по дальности, м" << "СКО боковое, м";
         dataTable->setHorizontalHeaderLabels(headerNames);
 
-        dataTable->setItem(0,0,new QTableWidgetItem("qwerty123456qwerty1234 56qwerty123456"));
+        dataTable->setItem(0,0,new QTableWidgetItem("A200-11"));
+        dataTable->setItem(1,0,new QTableWidgetItem("A200-12"));
+        dataTable->setItem(2,0,new QTableWidgetItem("A200-13"));
+        dataTable->setItem(0,1,new QTableWidgetItem("80"));
+        dataTable->setItem(1,1,new QTableWidgetItem("60"));
+        dataTable->setItem(2,1,new QTableWidgetItem("30"));
+        dataTable->setItem(0,2,new QTableWidgetItem("30"));
+        dataTable->setItem(1,2,new QTableWidgetItem("30"));
+        dataTable->setItem(2,2,new QTableWidgetItem("45"));
+        dataTable->setItem(0,3,new QTableWidgetItem("30"));
+        dataTable->setItem(1,3,new QTableWidgetItem("30"));
+        dataTable->setItem(2,3,new QTableWidgetItem("45"));
 
         header->setSectionResizeMode(QHeaderView::Stretch);
 //        header->setSectionResizeMode(header->logicalIndex(0), QHeaderView::ResizeToContents);
@@ -183,4 +198,52 @@ void Editor::showDirectoryInfo(QListWidgetItem* dirItem) {
         qDebug() << header->logicalIndex(0) << header->logicalIndex(1) << header->logicalIndex(2)
                  << header->logicalIndex(3) << header->logicalIndex(4);
     }
+}
+
+void Editor::slotAdd() {
+    dialog->setWindowTitle(directory->currentItem()->text());
+//    dialog->show();
+    if (dialog->exec() == QDialog::Accepted) {
+        qDebug() << "Yo";
+    }
+}
+
+void Editor::slotEdit() {
+    dialog->setWindowTitle(directory->currentItem()->text());
+
+    dialog->setHeaderNames(getHeaderNames());
+    dialog->setRootItemValues(getRootItemValues());
+    dialog->setItemValues(getItemValues());
+
+    if (dialog->exec() == QDialog::Accepted) {
+        qDebug() << "Yo!1";
+    }
+//    QModelIndex curentIndex = table->currentIndex();
+
+//    qDebug() << table->item(curentIndex.row(), 0)->text();
+//    qDebug() << table->item(curentIndex.row(), 1)->text();
+}
+
+QStringList Editor::getHeaderNames() {
+    QStringList list;
+    for (int i = 0; i < dataTable->columnCount(); i++) {
+        list.append(dataTable->horizontalHeaderItem(i)->text());
+    }
+    return list;
+}
+
+QStringList Editor::getRootItemValues() {
+    QStringList list;
+    for (int i = 0; i < dataTable->rowCount(); i++) {
+        list.append(dataTable->item(i, 0)->text());
+    }
+    return list;
+}
+
+QStringList Editor::getItemValues() {
+    QStringList list;
+    for (int i = 0; i < dataTable->columnCount() - 1; i++) {
+        list.append(dataTable->item(0, i + 1)->text());
+    }
+    return list;
 }

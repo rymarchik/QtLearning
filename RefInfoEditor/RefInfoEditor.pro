@@ -13,9 +13,11 @@ TEMPLATE = app
 
 
 SOURCES += main.cpp\
-        editor.cpp
+        editor.cpp \
+    dialog.cpp
 
-HEADERS  += editor.h
+HEADERS  += editor.h \
+    dialog.h
 
 FORMS    +=
 
