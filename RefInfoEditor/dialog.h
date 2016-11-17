@@ -12,7 +12,12 @@ public:
 
     void setHeaderNames(QStringList);
     void setRootItemValues(QStringList);
+    void setEmptyLineEdits(int);
+    void setLineEdits(int);
     void setItemValues(QStringList);
+
+    void clearLayout(QLayout*);
+    void clearLayoutExceptFirst(QLayout*);
 
 private:
     QLineEdit* newRootItem;
@@ -21,10 +26,11 @@ private:
     QList<QLabel*>* labelList;
     QList<QLineEdit*>* fieldList;
 
+    QVBoxLayout* labelLayout;
+    QVBoxLayout* fieldLayout;
+
     QPushButton* okButton;
     QPushButton* cancelButton;
-
-    QGridLayout* infoLayout;
 
 private slots:
 

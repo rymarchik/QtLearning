@@ -15,7 +15,6 @@ public:
 
     QStringList getHeaderNames();
     QStringList getRootItemValues();
-    QStringList getItemValues();
 
 private:
     QToolBar* tools;
@@ -36,7 +35,8 @@ private:
     Dialog* dialog;
 
 private slots:
-    void showDirectoryInfo(QListWidgetItem* item);
+    void slotShowDirectoryInfo(QListWidgetItem*);
+    void slotChangeRootItemValue(int);
     void slotAdd();
     void slotEdit();
 };

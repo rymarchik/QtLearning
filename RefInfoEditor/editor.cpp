@@ -74,7 +74,7 @@ Editor::Editor(QWidget *parent) :
         dirItem->setTextAlignment(Qt::AlignCenter);
     }
 
-    connect(directory, SIGNAL(itemClicked(QListWidgetItem*)), this, SLOT(showDirectoryInfo(QListWidgetItem*)));
+    connect(directory, SIGNAL(itemClicked(QListWidgetItem*)), this, SLOT(slotShowDirectoryInfo(QListWidgetItem*)));
 
     setCentralWidget(window);
     setWindowIcon(QIcon(":/resources/title.png"));
@@ -85,7 +85,7 @@ Editor::Editor(QWidget *parent) :
     connect(exitAction, SIGNAL(triggered()), qApp, SLOT(quit()));
 }
 
-void Editor::showDirectoryInfo(QListWidgetItem* dirItem) {
+void Editor::slotShowDirectoryInfo(QListWidgetItem* dirItem) {
     if (dirItem == directory->item(0)) {
         hiddenDataTable->setHidden(true);
 
@@ -200,11 +200,25 @@ void Editor::showDirectoryInfo(QListWidgetItem* dirItem) {
     }
 }
 
+void Editor::slotChangeRootItemValue(int n) {
+    if (n != -1) {
+        QStringList list;
+        for (int i = 0; i < dataTable->columnCount() - 1; i++) {
+            list.append(dataTable->item(n, i + 1)->text());
+        }
+        dialog->setItemValues(list);
+        dialog->setLineEdits(list.size());
+    }
+}
+
 void Editor::slotAdd() {
     dialog->setWindowTitle(directory->currentItem()->text());
-//    dialog->show();
+
+    dialog->setHeaderNames(getHeaderNames());
+    dialog->setEmptyLineEdits(getHeaderNames().size());
+
     if (dialog->exec() == QDialog::Accepted) {
-        qDebug() << "Yo";
+        qDebug() << "add";
     }
 }
 
@@ -213,10 +227,9 @@ void Editor::slotEdit() {
 
     dialog->setHeaderNames(getHeaderNames());
     dialog->setRootItemValues(getRootItemValues());
-    dialog->setItemValues(getItemValues());
 
     if (dialog->exec() == QDialog::Accepted) {
-        qDebug() << "Yo!1";
+        qDebug() << "edit";
     }
 //    QModelIndex curentIndex = table->currentIndex();
 
@@ -236,14 +249,6 @@ QStringList Editor::getRootItemValues() {
     QStringList list;
     for (int i = 0; i < dataTable->rowCount(); i++) {
         list.append(dataTable->item(i, 0)->text());
-    }
-    return list;
-}
-
-QStringList Editor::getItemValues() {
-    QStringList list;
-    for (int i = 0; i < dataTable->columnCount() - 1; i++) {
-        list.append(dataTable->item(0, i + 1)->text());
     }
     return list;
 }
