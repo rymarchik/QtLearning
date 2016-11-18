@@ -5,6 +5,17 @@ Editor::Editor(QWidget *parent) :
     QMainWindow(parent),
     dialog(new Dialog(this))
 {
+    db = QSqlDatabase::addDatabase("QPSQL");
+    db.setDatabaseName("A200");
+    db.setUserName("asrymarchik");
+    db.setPassword("123456");
+    db.setHostName("192.168.1.42");
+    db.setPort(5432);
+
+    if (!db.open()) {
+        qDebug() << "Can't open database: " << db.lastError();
+    }
+
     resize(915, 580);
 
     tools = addToolBar("Панель инструментов");
@@ -88,27 +99,50 @@ Editor::Editor(QWidget *parent) :
 void Editor::slotShowDirectoryInfo(QListWidgetItem* dirItem) {
     if (dirItem == directory->item(0)) {
         hiddenDataTable->setHidden(true);
-
         dataTable->clear();
-        dataTable->setColumnCount(4);
-        dataTable->setRowCount(3);
 
         QStringList headerNames;
         headerNames << "Тип БЧ ракеты" << "Радиус поражения, м" << "СКО по дальности, м" << "СКО боковое, м";
         dataTable->setHorizontalHeaderLabels(headerNames);
 
-        dataTable->setItem(0,0,new QTableWidgetItem("A200-11"));
-        dataTable->setItem(1,0,new QTableWidgetItem("A200-12"));
-        dataTable->setItem(2,0,new QTableWidgetItem("A200-13"));
-        dataTable->setItem(0,1,new QTableWidgetItem("80"));
-        dataTable->setItem(1,1,new QTableWidgetItem("60"));
-        dataTable->setItem(2,1,new QTableWidgetItem("30"));
-        dataTable->setItem(0,2,new QTableWidgetItem("30"));
-        dataTable->setItem(1,2,new QTableWidgetItem("30"));
-        dataTable->setItem(2,2,new QTableWidgetItem("45"));
-        dataTable->setItem(0,3,new QTableWidgetItem("30"));
-        dataTable->setItem(1,3,new QTableWidgetItem("30"));
-        dataTable->setItem(2,3,new QTableWidgetItem("45"));
+        QSqlQuery query;
+        QString selectQuery2 = "SELECT t.termname, w.attack_range, w.deviation_range, w.deviation_lateral FROM "
+                             "reference_data.terms t JOIN target_distribution.warhead_characteristics w ON"
+                             "t.termhierarchy = w.rocket_type";
+        QString selectQuery = "SELECT attack_range, deviation_range, deviation_lateral FROM "
+                             "target_distribution.warhead_characteristics";
+        if (!query.exec(selectQuery)) {
+            qDebug() << "Unable to make select operation";
+        }
+        else qDebug() << "URA!";
+        QSqlRecord rec = query.record();
+
+        dataTable->setColumnCount(rec.count());
+        dataTable->setRowCount(query.size());
+
+        while(query.next()) {
+            qDebug() << "hey" << query.value(0).toInt() << query.value(1).toInt() << query.value(2).toInt()
+                     << rec.indexOf("attack_range") << rec.indexOf("deviation_range") << rec.indexOf("deviation_lateral");
+            for (int i = 0; i < query.size(); i++) {
+ //            query.value(rec.indexOf("termname")).toString();
+                dataTable->setItem(i, 0, new QTableWidgetItem(tr("%1").arg(query.value(rec.indexOf("attack_range")).toInt())));
+                dataTable->setItem(i, 1, new QTableWidgetItem(tr("%1").arg(query.value(rec.indexOf("deviation_range")).toInt())));
+                dataTable->setItem(i, 2, new QTableWidgetItem(tr("%1").arg(query.value(rec.indexOf("deviation_lateral")).toInt())));
+            }
+        }
+
+//        dataTable->setItem(0,0,new QTableWidgetItem("A200-11"));
+//        dataTable->setItem(1,0,new QTableWidgetItem("A200-12"));
+//        dataTable->setItem(2,0,new QTableWidgetItem("A200-13"));
+//        dataTable->setItem(0,1,new QTableWidgetItem("80"));
+//        dataTable->setItem(1,1,new QTableWidgetItem("60"));
+//        dataTable->setItem(2,1,new QTableWidgetItem("30"));
+//        dataTable->setItem(0,2,new QTableWidgetItem("30"));
+//        dataTable->setItem(1,2,new QTableWidgetItem("30"));
+//        dataTable->setItem(2,2,new QTableWidgetItem("45"));
+//        dataTable->setItem(0,3,new QTableWidgetItem("30"));
+//        dataTable->setItem(1,3,new QTableWidgetItem("30"));
+//        dataTable->setItem(2,3,new QTableWidgetItem("45"));
 
         header->setSectionResizeMode(QHeaderView::Stretch);
 //        header->setSectionResizeMode(header->logicalIndex(0), QHeaderView::ResizeToContents);
@@ -118,7 +152,9 @@ void Editor::slotShowDirectoryInfo(QListWidgetItem* dirItem) {
 
         dataTable->clear();
         dataTable->setColumnCount(2);
-        dataTable->setRowCount(10);
+//        dataTable->setRowCount(10);
+        dataTable->setItem(0,0,new QTableWidgetItem("A200-11"));
+        dataTable->setItem(1,0,new QTableWidgetItem("A200-12"));
 
         QStringList headerNames;
         headerNames << "Наименование степени поражения" << "Значение степени поражения";

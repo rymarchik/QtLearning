@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include <QtWidgets>
+#include <QtSql>
 
 class Dialog;
 
@@ -33,6 +34,7 @@ private:
     QHeaderView* header;
 
     Dialog* dialog;
+    QSqlDatabase db;
 
 private slots:
     void slotShowDirectoryInfo(QListWidgetItem*);
