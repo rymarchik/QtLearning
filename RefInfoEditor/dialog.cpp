@@ -4,7 +4,10 @@
 Dialog::Dialog(QWidget *parent) :
     QDialog(parent, Qt::WindowCloseButtonHint)
 {
-    editRootItem = new QComboBox;
+    mainComboBox = new QComboBox;
+    comboBox2 = new QComboBox;
+    comboBox2->setObjectName("secondCB");
+    comboBox3 = new QComboBox;
 
     labelList = new QList<QLabel*>;
     fieldList = new QList<QLineEdit*>;
@@ -30,8 +33,9 @@ Dialog::Dialog(QWidget *parent) :
 
     connect(okButton, SIGNAL(clicked()), this, SLOT(accept()));
     connect(cancelButton, SIGNAL(clicked()), this, SLOT(reject()));
-    connect(editRootItem, SIGNAL(currentIndexChanged(int)), this->parent(), SLOT(slotChangeRootItemValue(int)));
-
+    connect(mainComboBox, SIGNAL(currentIndexChanged(int)), this->parent(), SLOT(slotChangeRootItemValue(int)));
+    connect(comboBox2, SIGNAL(currentIndexChanged(int)), this->parent(), SLOT(slotChange2ndRootItemValue(int)));
+    connect(comboBox3, SIGNAL(currentIndexChanged(int)), this->parent(), SLOT(slotChange3rdRootItemValue(int)));
 }
 
 void Dialog::clearLayout(QLayout* layout) {
@@ -45,18 +49,21 @@ void Dialog::clearLayout(QLayout* layout) {
     }
 }
 
-void Dialog::clearLayoutExceptFirst(QLayout* layout) {
-    while (QLayoutItem* item = layout->takeAt(1))
-    {
-        if (QWidget* widget = item->widget())
-            delete widget;
-        if (QLayout* childLayout = item->layout())
-            clearLayout(childLayout);
-        delete item;
+void Dialog::clearLineEdits(QLayout* layout) {
+    int wgtCount = layout->count();
+    qDebug() << "before = " << wgtCount;
+    for (int i = wgtCount - 1; i >= 0; i--) {
+        qDebug() << i;
+        if (layout->itemAt(i)->widget()->metaObject()->className() == QString("QLineEdit")) {
+            delete layout->takeAt(i)->widget();
+            delete layout->takeAt(i);
+            qDebug() << i;
+        }
     }
+    qDebug() << "after = " << layout->count();
 }
 
-void Dialog::setHeaderNames(QStringList list) {
+void Dialog::setLabelNames(QStringList list) {
     clearLayout(labelLayout);
     labelList->clear();
 
@@ -66,22 +73,49 @@ void Dialog::setHeaderNames(QStringList list) {
     }
 }
 
-void Dialog::setRootItemValues(QStringList list) {
-    if (editRootItem->count() == 0)
-        clearLayout(fieldLayout);
-    editRootItem->setHidden(false);
-    editRootItem->clear();
+void Dialog::setMainComboBoxValues(QStringList list) {
+    mainComboBox->setHidden(false);
+    comboBox2->setHidden(true);
+    comboBox3->setHidden(true);
+    mainComboBox->clear();
 
-    editRootItem->addItems(list);
-    fieldLayout->insertWidget(0, editRootItem);
+    mainComboBox->addItems(list);
+    fieldLayout->insertWidget(0, mainComboBox);
+}
+
+void Dialog::setSecondComboBoxValues(QStringList list) {
+    comboBox2->setHidden(false);
+    comboBox2->clear();
+    comboBox2->addItems(list);
+
+    int comboBoxOverseer = 0;
+    for (int i = 0; i < fieldLayout->count(); i++) {
+        if (fieldLayout->itemAt(i)->widget()->objectName() == "secondCB") {
+            comboBoxOverseer++;
+            return;
+        }
+    }
+
+    if (comboBoxOverseer == 0) {
+        fieldLayout->insertWidget(0, comboBox2);
+    }
+}
+
+void Dialog::setThirdComboBoxValues(QStringList list) {
+    comboBox3->setHidden(false);
+    comboBox3->clear();
+    comboBox3->addItems(list);
+
+    if (fieldLayout->count() < 4) {
+        fieldLayout->insertWidget(0, comboBox3);
+    }
 }
 
 void Dialog::setEmptyLineEdits(int n) {
-    if (editRootItem->count() == 0)
-        clearLayout(fieldLayout);
-    else
-        clearLayoutExceptFirst(fieldLayout);
-    editRootItem->setHidden(true);
+    clearLineEdits(fieldLayout);
+    mainComboBox->setHidden(true);
+    comboBox2->setHidden(true);
+    comboBox3->setHidden(true);
     fieldList->clear();
 
     for (int i = 0; i < n; i++) {
@@ -90,18 +124,38 @@ void Dialog::setEmptyLineEdits(int n) {
     }
 }
 
-void Dialog::setLineEdits(int n) {
-    clearLayoutExceptFirst(fieldLayout);
+void Dialog::placeFieldList(int n) {
+    clearLineEdits(fieldLayout);
 
     for (int i = 0; i < n; i++) {
         fieldLayout->addWidget(fieldList->at(i));
     }
 }
 
-void Dialog::setItemValues(QStringList list) {
+void Dialog::fillFieldList(QStringList list) {
     fieldList->clear();
 
     for (int i = 0; i < list.size(); i++) {
         fieldList->append(new QLineEdit(list.at(i)));
     }
+}
+
+void Dialog::setMainComboBoxCurrentIndex(int index) {
+    mainComboBox->setCurrentIndex(index);
+}
+
+QString Dialog::getCurrentMainComboBoxText() {
+    return mainComboBox->currentText();
+}
+
+QString Dialog::getCurrentSecondComboBoxText() {
+    return comboBox2->currentText();
+}
+
+QString Dialog::getCurrentThirdComboBoxText() {
+    return comboBox3->currentText();
+}
+
+QString Dialog::getCurrentFieldText(int n) {
+    return fieldList->at(n)->text();
 }

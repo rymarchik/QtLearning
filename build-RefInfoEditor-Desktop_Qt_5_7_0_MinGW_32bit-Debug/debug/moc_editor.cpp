@@ -19,8 +19,8 @@
 
 QT_BEGIN_MOC_NAMESPACE
 struct qt_meta_stringdata_Editor_t {
-    QByteArrayData data[7];
-    char stringdata0[88];
+    QByteArrayData data[11];
+    char stringdata0[176];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
@@ -33,14 +33,21 @@ QT_MOC_LITERAL(0, 0, 6), // "Editor"
 QT_MOC_LITERAL(1, 7, 21), // "slotShowDirectoryInfo"
 QT_MOC_LITERAL(2, 29, 0), // ""
 QT_MOC_LITERAL(3, 30, 16), // "QListWidgetItem*"
-QT_MOC_LITERAL(4, 47, 23), // "slotChangeRootItemValue"
-QT_MOC_LITERAL(5, 71, 7), // "slotAdd"
-QT_MOC_LITERAL(6, 79, 8) // "slotEdit"
+QT_MOC_LITERAL(4, 47, 22), // "slotShowLowerFireTable"
+QT_MOC_LITERAL(5, 70, 23), // "slotChangeRootItemValue"
+QT_MOC_LITERAL(6, 94, 26), // "slotChange2ndRootItemValue"
+QT_MOC_LITERAL(7, 121, 26), // "slotChange3rdRootItemValue"
+QT_MOC_LITERAL(8, 148, 7), // "slotAdd"
+QT_MOC_LITERAL(9, 156, 8), // "slotEdit"
+QT_MOC_LITERAL(10, 165, 10) // "slotDelete"
 
     },
     "Editor\0slotShowDirectoryInfo\0\0"
-    "QListWidgetItem*\0slotChangeRootItemValue\0"
-    "slotAdd\0slotEdit"
+    "QListWidgetItem*\0slotShowLowerFireTable\0"
+    "slotChangeRootItemValue\0"
+    "slotChange2ndRootItemValue\0"
+    "slotChange3rdRootItemValue\0slotAdd\0"
+    "slotEdit\0slotDelete"
 };
 #undef QT_MOC_LITERAL
 
@@ -50,7 +57,7 @@ static const uint qt_meta_data_Editor[] = {
        7,       // revision
        0,       // classname
        0,    0, // classinfo
-       4,   14, // methods
+       8,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -58,14 +65,22 @@ static const uint qt_meta_data_Editor[] = {
        0,       // signalCount
 
  // slots: name, argc, parameters, tag, flags
-       1,    1,   34,    2, 0x08 /* Private */,
-       4,    1,   37,    2, 0x08 /* Private */,
-       5,    0,   40,    2, 0x08 /* Private */,
-       6,    0,   41,    2, 0x08 /* Private */,
+       1,    1,   54,    2, 0x08 /* Private */,
+       4,    0,   57,    2, 0x08 /* Private */,
+       5,    1,   58,    2, 0x08 /* Private */,
+       6,    1,   61,    2, 0x08 /* Private */,
+       7,    1,   64,    2, 0x08 /* Private */,
+       8,    0,   67,    2, 0x08 /* Private */,
+       9,    0,   68,    2, 0x08 /* Private */,
+      10,    0,   69,    2, 0x08 /* Private */,
 
  // slots: parameters
     QMetaType::Void, 0x80000000 | 3,    2,
+    QMetaType::Void,
     QMetaType::Void, QMetaType::Int,    2,
+    QMetaType::Void, QMetaType::Int,    2,
+    QMetaType::Void, QMetaType::Int,    2,
+    QMetaType::Void,
     QMetaType::Void,
     QMetaType::Void,
 
@@ -79,9 +94,13 @@ void Editor::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void
         Q_UNUSED(_t)
         switch (_id) {
         case 0: _t->slotShowDirectoryInfo((*reinterpret_cast< QListWidgetItem*(*)>(_a[1]))); break;
-        case 1: _t->slotChangeRootItemValue((*reinterpret_cast< int(*)>(_a[1]))); break;
-        case 2: _t->slotAdd(); break;
-        case 3: _t->slotEdit(); break;
+        case 1: _t->slotShowLowerFireTable(); break;
+        case 2: _t->slotChangeRootItemValue((*reinterpret_cast< int(*)>(_a[1]))); break;
+        case 3: _t->slotChange2ndRootItemValue((*reinterpret_cast< int(*)>(_a[1]))); break;
+        case 4: _t->slotChange3rdRootItemValue((*reinterpret_cast< int(*)>(_a[1]))); break;
+        case 5: _t->slotAdd(); break;
+        case 6: _t->slotEdit(); break;
+        case 7: _t->slotDelete(); break;
         default: ;
         }
     }
@@ -112,13 +131,13 @@ int Editor::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 4)
+        if (_id < 8)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 4;
+        _id -= 8;
     } else if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
-        if (_id < 4)
+        if (_id < 8)
             *reinterpret_cast<int*>(_a[0]) = -1;
-        _id -= 4;
+        _id -= 8;
     }
     return _id;
 }

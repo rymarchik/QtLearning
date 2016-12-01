@@ -14,8 +14,10 @@ class Editor : public QMainWindow
 public:
     explicit Editor(QWidget *parent = 0);
 
-    QStringList getHeaderNames();
-    QStringList getRootItemValues();
+    QStringList getLowerTableHeaderNames();
+    QStringList getAllTableHeaderNames();
+    QStringList getRootColumnValues();
+    QStringList getUpperTableColumnValues();
 
 private:
     QToolBar* tools;
@@ -27,20 +29,24 @@ private:
     QAction* downloadAction;
     QAction* exitAction;
 
-    QWidget* window;
-    QListWidget* directory;
-    QTableWidget* hiddenDataTable;
-    QTableWidget* dataTable;
-    QHeaderView* header;
+    QWidget* contentWindow;
+    QListWidget* directoryList;
+    QTableWidget* upperTable;
+    QTableWidget* lowerTable;
+    QHeaderView* lowerTableHeader;
 
     Dialog* dialog;
     QSqlDatabase db;
 
 private slots:
     void slotShowDirectoryInfo(QListWidgetItem*);
+    void slotShowLowerFireTable();
     void slotChangeRootItemValue(int);
+    void slotChange2ndRootItemValue(int);
+    void slotChange3rdRootItemValue(int);
     void slotAdd();
     void slotEdit();
+    void slotDelete();
 };
 
 #endif // EDITOR_H

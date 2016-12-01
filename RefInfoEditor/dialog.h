@@ -10,18 +10,30 @@ class Dialog : public QDialog
 public:
     explicit Dialog(QWidget *parent = 0);
 
-    void setHeaderNames(QStringList);
-    void setRootItemValues(QStringList);
+    void setLabelNames(QStringList);
     void setEmptyLineEdits(int);
-    void setLineEdits(int);
-    void setItemValues(QStringList);
+    void placeFieldList(int);
+    void fillFieldList(QStringList);
+
+    void setMainComboBoxValues(QStringList);
+    void setSecondComboBoxValues(QStringList);
+    void setThirdComboBoxValues(QStringList);
+    void setMainComboBoxCurrentIndex(int);
+
+    QString getCurrentMainComboBoxText();
+    QString getCurrentSecondComboBoxText();
+    QString getCurrentThirdComboBoxText();
+
+    QString getCurrentFieldText(int);
 
     void clearLayout(QLayout*);
-    void clearLayoutExceptFirst(QLayout*);
+    void clearLineEdits(QLayout*);
+    void clearWidgets();
 
 private:
-    QLineEdit* newRootItem;
-    QComboBox* editRootItem;
+    QComboBox* mainComboBox;
+    QComboBox* comboBox2;
+    QComboBox* comboBox3;
 
     QList<QLabel*>* labelList;
     QList<QLineEdit*>* fieldList;
