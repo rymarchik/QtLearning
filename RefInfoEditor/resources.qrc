@@ -10,5 +10,8 @@
         <file>resources/search.png</file>
         <file>resources/download.png</file>
         <file>resources/upload.png</file>
+        <file>resources/add_bw.png</file>
+        <file>resources/delete_bw.png</file>
+        <file>resources/edit_bw.png</file>
     </qresource>
 </RCC>

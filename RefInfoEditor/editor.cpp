@@ -35,6 +35,11 @@ Editor::Editor(QWidget *parent) :
     uploadAction = new QAction(QIcon(":/resources/upload.png"), "Сохранить");
     downloadAction = new QAction(QIcon(":/resources/download.png"), "Загрузить");
     exitAction = new QAction(QIcon(":/resources/exit.png"), "Выход");
+
+    addAction->setEnabled(false);
+    editAction->setEnabled(false);
+    deleteAction->setEnabled(false);
+
     tools->addAction(addAction);
     tools->addAction(editAction);
     tools->addAction(deleteAction);
@@ -92,18 +97,28 @@ Editor::Editor(QWidget *parent) :
 
     connect(directoryList, SIGNAL(itemClicked(QListWidgetItem*)), this, SLOT(slotShowDirectoryInfo(QListWidgetItem*)));
     connect(upperTable, SIGNAL(itemSelectionChanged()), this, SLOT(slotShowLowerFireTable()));
-
-    setCentralWidget(contentWindow);
-    setWindowIcon(QIcon(":/resources/title.png"));
-    setWindowTitle("Редактор нормативно-справочной информации");
+    connect(upperTable, SIGNAL(itemClicked(QTableWidgetItem*)), this, SLOT(slotActivateDeleteButton()));
+    connect(lowerTable, SIGNAL(itemClicked(QTableWidgetItem*)), this, SLOT(slotActivateDeleteButton()));
 
     connect(addAction, SIGNAL(triggered()), this, SLOT(slotAdd()));
     connect(editAction, SIGNAL(triggered()), this, SLOT(slotEdit()));
     connect(deleteAction, SIGNAL(triggered()), this, SLOT(slotDelete()));
     connect(exitAction, SIGNAL(triggered()), qApp, SLOT(quit()));
+
+    setCentralWidget(contentWindow);
+    setWindowIcon(QIcon(":/resources/title.png"));
+    setWindowTitle("Редактор нормативно-справочной информации");
+}
+
+void Editor::slotActivateDeleteButton() {
+    deleteAction->setEnabled(true);
 }
 
 void Editor::slotShowDirectoryInfo(QListWidgetItem* dirItem) {
+    addAction->setEnabled(true);
+    editAction->setEnabled(true);
+    deleteAction->setEnabled(false);
+
     if (dirItem == directoryList->item(0)) {
         upperTable->setHidden(true);
         lowerTableHeader->setHidden(false);
@@ -423,6 +438,10 @@ void Editor::slotAdd() {
     else {
         dialog->setLabelNames(getLowerTableHeaderNames());
         dialog->setEmptyLineEdits(getLowerTableHeaderNames().size());
+
+        if (directoryList->currentItem() == directoryList->item(0)) {
+//            QValidator
+        }
     }
 
     if (dialog->exec() == QDialog::Accepted) {
@@ -442,10 +461,12 @@ void Editor::slotAdd() {
                     .arg(dialog->getCurrentFieldText(8)).arg(dialog->getCurrentFieldText(9));
 
             if (!query.exec(insertQuery)) {
-                qDebug() << "Unable to make insert operation";
+                qDebug() << "Unable to make insert operation\n" << query.lastError();
+                QMessageBox::critical(this, "Ошибка", "Добавить данные не удалось!");
             }
             else {
-                QMessageBox::information(this, "Уведомление", "Обновление прошло успешно!");
+                QMessageBox::information(this, "Уведомление", "Добавление прошло успешно!");
+                slotShowDirectoryInfo(directoryList->currentItem());
             }
         }
         else {
@@ -484,14 +505,17 @@ void Editor::slotAdd() {
 
             db.transaction();
             if (!query.exec(insertQuery)) {
-                qDebug() << "Unable to make 1st insert operation";
+                qDebug() << "Unable to make 1st insert operation\n" << query.lastError();
             }
             if (!query.exec(insertQuery2)) {
-                qDebug() << "Unable to make 2nd insert operation";
+                qDebug() << "Unable to make 2nd insert operation\n" << query.lastError();
             }
             if (db.commit()) {
                 QMessageBox::information(this, "Уведомление", "Добавление прошло успешно!");
-//                slotShowDirectoryInfo();
+                slotShowDirectoryInfo(directoryList->currentItem());
+            }
+            else {
+                QMessageBox::critical(this, "Ошибка", "Добавить данные не удалось!");
             }
         }
     }
@@ -507,6 +531,18 @@ void Editor::slotEdit() {
     else {
         dialog->setLabelNames(getLowerTableHeaderNames());
         dialog->setMainComboBoxValues(getRootColumnValues());
+
+        if (directoryList->currentItem() == directoryList->item(0)) {
+
+//            QIntValidator validator1(10, 1000, this);
+//            dialog->setLineEditValidator(0, validator1);
+
+//            QIntValidator validator2(10, 999);
+//            dialog->setLineEditValidator(1, validator2);
+
+//            QIntValidator validator3(10, 999);
+//            dialog->setLineEditValidator(2, validator3);
+        }
     }
 
     if (dialog->exec() == QDialog::Accepted) {
@@ -563,10 +599,13 @@ void Editor::slotEdit() {
         }
 
         if (!query.exec(updateQuery)) {
-            qDebug() << "Unable to make update operation";
+            qDebug() << "Unable to make update operation\n" << query.lastError();
+            QMessageBox::critical(this, "Ошибка", "Обновить данные не удалось!");
         }
         else {
             QMessageBox::information(this, "Уведомление", "Обновление прошло успешно!");
+            slotShowDirectoryInfo(directoryList->currentItem());
+            upperTable->setCurrentItem(upperTable->item(dialog->getMainComboBoxCurrentIndex(), 0));
         }
     }
 }
@@ -592,10 +631,18 @@ void Editor::slotDelete() {
         }
 
         if (!query.exec(deleteQuery)) {
-            qDebug() << "Unable to make delete operation";
+            qDebug() << "Unable to make delete operation\n" << query.lastError();
+            QMessageBox::critical(this, "Ошибка", "Удалить данные не удалось!");
         }
         else {
             QMessageBox::information(this, "Уведомление", "Удаление прошло успешно!");
+            if (lowerTable->hasFocus()) {
+                slotShowLowerFireTable();
+                deleteAction->setEnabled(false);
+            }
+            else {
+                slotShowDirectoryInfo(directoryList->currentItem());
+            }
         }
     }
     else {
@@ -625,13 +672,17 @@ void Editor::slotDelete() {
 
         db.transaction();
         if (!query.exec(deleteQuery)) {
-            qDebug() << "Unable to make 1st delete operation";
+            qDebug() << "Unable to make 1st delete operation\n" << query.lastError();
         }
         if (!query.exec(deleteQuery2)) {
-            qDebug() << "Unable to make 2nd delete operation";
+            qDebug() << "Unable to make 2nd delete operation\n" << query.lastError();
         }
         if (db.commit()) {
             QMessageBox::information(this, "Уведомление", "Удаление прошло успешно!");
+            slotShowDirectoryInfo(directoryList->currentItem());
+        }
+        else {
+            QMessageBox::critical(this, "Ошибка", "Удалить данные не удалось!");
         }
     }
 }

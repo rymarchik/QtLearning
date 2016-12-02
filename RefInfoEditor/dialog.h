@@ -20,15 +20,18 @@ public:
     void setThirdComboBoxValues(QStringList);
     void setMainComboBoxCurrentIndex(int);
 
+    int getMainComboBoxCurrentIndex();
     QString getCurrentMainComboBoxText();
     QString getCurrentSecondComboBoxText();
     QString getCurrentThirdComboBoxText();
-
     QString getCurrentFieldText(int);
 
     void clearLayout(QLayout*);
     void clearLineEdits(QLayout*);
-    void clearWidgets();
+
+    int getFieldsCount();
+    void setLineEditValidator(int, QIntValidator);
+    void setLineEditValidator(int, QDoubleValidator);
 
 private:
     QComboBox* mainComboBox;

@@ -144,6 +144,10 @@ void Dialog::setMainComboBoxCurrentIndex(int index) {
     mainComboBox->setCurrentIndex(index);
 }
 
+int Dialog::getMainComboBoxCurrentIndex() {
+    return mainComboBox->currentIndex();
+}
+
 QString Dialog::getCurrentMainComboBoxText() {
     return mainComboBox->currentText();
 }
@@ -158,4 +162,16 @@ QString Dialog::getCurrentThirdComboBoxText() {
 
 QString Dialog::getCurrentFieldText(int n) {
     return fieldList->at(n)->text();
+}
+
+int Dialog::getFieldsCount() {
+    return fieldList->size();
+}
+
+void Dialog::setLineEditValidator(int index, QIntValidator validator) {
+    fieldList->at(index)->setValidator(validator);
+}
+
+void Dialog::setLineEditValidator(int index, QDoubleValidator validator) {
+    fieldList->at(index)->setValidator(validator);
 }

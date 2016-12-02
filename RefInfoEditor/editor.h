@@ -41,9 +41,12 @@ private:
 private slots:
     void slotShowDirectoryInfo(QListWidgetItem*);
     void slotShowLowerFireTable();
+    void slotActivateDeleteButton();
+
     void slotChangeRootItemValue(int);
     void slotChange2ndRootItemValue(int);
     void slotChange3rdRootItemValue(int);
+
     void slotAdd();
     void slotEdit();
     void slotDelete();
