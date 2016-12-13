@@ -15,10 +15,17 @@ public:
     void placeFieldList(int);
     void fillFieldList(QStringList);
 
-    void setMainComboBoxValues(QStringList);
-    void setSecondComboBoxValues(QStringList);
-    void setThirdComboBoxValues(QStringList);
+    void setAddDialComboBox1Values(QStringList);
+    void setAddDialComboBox2Values(QStringList);
+    void setAddDialComboBox3Values(QStringList);
+    void setEditDialComboBox1Values(QStringList);
+    void setEditDialComboBox2Values(QStringList);
+    void setEditDialComboBox3Values(QStringList);
+
     void setMainComboBoxCurrentIndex(int);
+    void setMainComboBoxCurrentText(QString);
+    void setSecondComboBoxCurrentText(QString);
+    void setThirdComboBoxCurrentText(QString);
 
     int getMainComboBoxCurrentIndex();
     QString getCurrentMainComboBoxText();
@@ -26,17 +33,27 @@ public:
     QString getCurrentThirdComboBoxText();
     QString getCurrentFieldText(int);
 
+    int getCurrentAddDialCB1Index();
+    QString getCurrentAddDialCB1Text();
+    QString getCurrentAddDialCB2Text();
+    QString getCurrentAddDialCB3Text();
+    void setCurrentAddDialCB1Index(int);
+
     void clearLayout(QLayout*);
     void clearLineEdits(QLayout*);
 
     int getFieldsCount();
-    void setLineEditValidator(int, QIntValidator);
-    void setLineEditValidator(int, QDoubleValidator);
+    void setLineEditValidator(int, QIntValidator*);
+    void setLineEditValidator(int, QDoubleValidator*);
+    void setLineEditPlaceholder(int, QString);
 
 private:
-    QComboBox* mainComboBox;
-    QComboBox* comboBox2;
-    QComboBox* comboBox3;
+    QComboBox* addDialComboBox1;
+    QComboBox* addDialComboBox2;
+    QComboBox* addDialComboBox3;
+    QComboBox* editDialComboBox1;
+    QComboBox* editDialComboBox2;
+    QComboBox* editDialComboBox3;
 
     QList<QLabel*>* labelList;
     QList<QLineEdit*>* fieldList;

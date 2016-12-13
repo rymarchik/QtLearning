@@ -16,7 +16,9 @@ public:
 
     QStringList getLowerTableHeaderNames();
     QStringList getAllTableHeaderNames();
-    QStringList getRootColumnValues();
+
+    QStringList getToBeAddedColumnValues();
+    QStringList getToBeEditedColumnValues();
     QStringList getUpperTableColumnValues();
 
 private:
@@ -41,11 +43,13 @@ private:
 private slots:
     void slotShowDirectoryInfo(QListWidgetItem*);
     void slotShowLowerFireTable();
-    void slotActivateDeleteButton();
+    void slotActivateEditDeleteButton();
 
-    void slotChangeRootItemValue(int);
-    void slotChange2ndRootItemValue(int);
-    void slotChange3rdRootItemValue(int);
+    void slotAddDialChangeComboBox1(int);
+    void slotAddDialChangeComboBox2(int);
+    void slotEditDialChangeComboBox1(int);
+    void slotEditDialChangeComboBox2(int);
+    void slotEditDialChangeComboBox3(int);
 
     void slotAdd();
     void slotEdit();

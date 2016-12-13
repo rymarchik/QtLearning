@@ -21,7 +21,7 @@ Editor::Editor(QWidget *parent) :
         qDebug() << "Can't open database: " << db.lastError();
     }
 
-    resize(915, 580);
+    resize(1000, 580);
 
     tools = addToolBar("Панель инструментов");
     tools->setMovable(false);
@@ -97,8 +97,8 @@ Editor::Editor(QWidget *parent) :
 
     connect(directoryList, SIGNAL(itemClicked(QListWidgetItem*)), this, SLOT(slotShowDirectoryInfo(QListWidgetItem*)));
     connect(upperTable, SIGNAL(itemSelectionChanged()), this, SLOT(slotShowLowerFireTable()));
-    connect(upperTable, SIGNAL(itemClicked(QTableWidgetItem*)), this, SLOT(slotActivateDeleteButton()));
-    connect(lowerTable, SIGNAL(itemClicked(QTableWidgetItem*)), this, SLOT(slotActivateDeleteButton()));
+    connect(upperTable, SIGNAL(itemClicked(QTableWidgetItem*)), this, SLOT(slotActivateEditDeleteButton()));
+    connect(lowerTable, SIGNAL(itemClicked(QTableWidgetItem*)), this, SLOT(slotActivateEditDeleteButton()));
 
     connect(addAction, SIGNAL(triggered()), this, SLOT(slotAdd()));
     connect(editAction, SIGNAL(triggered()), this, SLOT(slotEdit()));
@@ -110,13 +110,14 @@ Editor::Editor(QWidget *parent) :
     setWindowTitle("Редактор нормативно-справочной информации");
 }
 
-void Editor::slotActivateDeleteButton() {
+void Editor::slotActivateEditDeleteButton() {
+    editAction->setEnabled(true);
     deleteAction->setEnabled(true);
 }
 
 void Editor::slotShowDirectoryInfo(QListWidgetItem* dirItem) {
     addAction->setEnabled(true);
-    editAction->setEnabled(true);
+    editAction->setEnabled(false);
     deleteAction->setEnabled(false);
 
     if (dirItem == directoryList->item(0)) {
@@ -220,6 +221,9 @@ void Editor::slotShowDirectoryInfo(QListWidgetItem* dirItem) {
         lowerTable->setHorizontalHeaderLabels(headerNames);
 
         lowerTableHeader->setSectionResizeMode(QHeaderView::Stretch);
+        lowerTableHeader->setSectionResizeMode(0, QHeaderView::ResizeToContents);
+        lowerTableHeader->setSectionResizeMode(1, QHeaderView::ResizeToContents);
+        lowerTableHeader->setSectionResizeMode(2, QHeaderView::ResizeToContents);
     }
     else if (dirItem == directoryList->item(3)) {
         upperTable->setHidden(true);
@@ -337,9 +341,12 @@ void Editor::slotShowLowerFireTable() {
     lowerTableHeader->setSectionResizeMode(QHeaderView::ResizeToContents);
 }
 
-void Editor::slotChangeRootItemValue(int n) {
+void Editor::slotEditDialChangeComboBox1(int n) {
     if (n != -1) {
         if (directoryList->currentItem() == directoryList->item(2)) {
+            if (lowerTable->hasFocus()) {
+                dialog->setMainComboBoxCurrentText(lowerTable->item(lowerTable->currentRow(), 0)->text());
+            }
             QStringList list;
             for (int i = 0; i < lowerTable->rowCount(); i++) {
                 if (lowerTable->item(i, 0)->text() == dialog->getCurrentMainComboBoxText())
@@ -347,7 +354,7 @@ void Editor::slotChangeRootItemValue(int n) {
                         list.append(lowerTable->item(i, 1)->text());
             }
             qDebug() << list;
-            dialog->setSecondComboBoxValues(list);
+            dialog->setEditDialComboBox2Values(list);
 
 //  ALSO WORKING OPTION -----------------------------------------------------------------------------------
 //            QStringList list;
@@ -367,30 +374,77 @@ void Editor::slotChangeRootItemValue(int n) {
 //            dialog->setSecondComboBoxValues(list);
         }
         else if (directoryList->currentItem() == directoryList->item(4)) {
-            if (upperTable->hasFocus()) {
+            if (upperTable->hasFocus() || lowerTable->hasFocus()) {
                 dialog->setMainComboBoxCurrentIndex(upperTable->currentRow());
             }
             else {
                 upperTable->setCurrentItem(upperTable->item(n, 0));
             }
-            QStringList list = getRootColumnValues();
+            QStringList list = getToBeEditedColumnValues();
             qDebug() << list;
-            dialog->setSecondComboBoxValues(list);
+            dialog->setEditDialComboBox2Values(list);
         }
         else {
             QStringList list;
-            for (int i = 0; i < lowerTable->columnCount() - 1; i++) {
-                list.append(lowerTable->item(n, i + 1)->text());
+
+            if (lowerTable->hasFocus()) {
+                dialog->setMainComboBoxCurrentIndex(lowerTable->currentRow());
+                for (int i = 0; i < lowerTable->columnCount() - 1; i++) {
+                    list.append(lowerTable->item(lowerTable->currentRow(), i + 1)->text());
+                }
+            }
+            else {
+                for (int i = 0; i < lowerTable->columnCount() - 1; i++) {
+                    list.append(lowerTable->item(n, i + 1)->text());
+                }
             }
             dialog->fillFieldList(list);
             dialog->placeFieldList(list.size());
+
+            QIntValidator* intValidator;
+            QDoubleValidator* doubleValidator;
+            QLocale locale(QLocale::C);
+            locale.setNumberOptions(QLocale::RejectGroupSeparator);
+
+            if (directoryList->currentItem() == directoryList->item(0)) {
+                intValidator = new QIntValidator(10, 1000);
+                dialog->setLineEditValidator(0, intValidator);
+                dialog->setLineEditPlaceholder(0, "от 10 до 1000");
+
+                intValidator = new QIntValidator(10, 999);
+                dialog->setLineEditValidator(1, intValidator);
+                dialog->setLineEditPlaceholder(1, "от 10 до 999");
+
+                intValidator = new QIntValidator(10, 999);
+                dialog->setLineEditValidator(2, intValidator);
+                dialog->setLineEditPlaceholder(2, "от 10 до 999");
+            }
+            else if (directoryList->currentItem() == directoryList->item(1)) {
+                doubleValidator = new QDoubleValidator(0.01, 1, 2);
+                doubleValidator->setLocale(locale);
+                doubleValidator->setNotation(QDoubleValidator::StandardNotation);
+                dialog->setLineEditValidator(0, doubleValidator);
+                dialog->setLineEditPlaceholder(0, "от 0.01 до 1");
+            }
+            else if (directoryList->currentItem() == directoryList->item(3)) {
+                intValidator = new QIntValidator(10, 10000);
+                dialog->setLineEditValidator(0, intValidator);
+                dialog->setLineEditPlaceholder(0, "от 10 до 10000");
+
+                intValidator = new QIntValidator(10, 10000);
+                dialog->setLineEditValidator(1, intValidator);
+                dialog->setLineEditPlaceholder(1, "от 10 до 10000");
+            }
         }
     }
 }
 
-void Editor::slotChange2ndRootItemValue(int n) {
+void Editor::slotEditDialChangeComboBox2(int n) {
     if (n != -1) {
         if (directoryList->currentItem() == directoryList->item(2)) {
+            if (lowerTable->hasFocus()) {
+                dialog->setSecondComboBoxCurrentText(lowerTable->item(lowerTable->currentRow(), 1)->text());
+            }
             QStringList list;
             for (int i = 0; i < lowerTable->rowCount(); i++) {
                 if (lowerTable->item(i, 0)->text() == dialog->getCurrentMainComboBoxText())
@@ -398,22 +452,80 @@ void Editor::slotChange2ndRootItemValue(int n) {
                        list.append(lowerTable->item(i, 2)->text());
             }
             qDebug() << list;
-            dialog->setThirdComboBoxValues(list);
+            dialog->setEditDialComboBox3Values(list);
         }
         else if (directoryList->currentItem() == directoryList->item(4)) {
             QStringList list;
-            for (int i = 0; i < lowerTable->columnCount() - 1; i++) {
-                list.append(lowerTable->item(n, i + 1)->text());
+
+            if (lowerTable->hasFocus()) {
+                dialog->setSecondComboBoxCurrentText(lowerTable->item(lowerTable->currentRow(), 0)->text());
+                for (int i = 0; i < lowerTable->columnCount() - 1; i++) {
+                    list.append(lowerTable->item(lowerTable->currentRow(), i + 1)->text());
+                }
             }
+            else {
+                for (int i = 0; i < lowerTable->columnCount() - 1; i++) {
+                    list.append(lowerTable->item(n, i + 1)->text());
+                }
+            }
+
             qDebug() << list;
             dialog->fillFieldList(list);
             dialog->placeFieldList(list.size());
+
+            QIntValidator* intValidator;
+            QDoubleValidator* doubleValidator;
+            QLocale locale(QLocale::C);
+            locale.setNumberOptions(QLocale::RejectGroupSeparator);
+
+            doubleValidator = new QDoubleValidator(0, 89.999, 3);
+            doubleValidator->setLocale(locale);
+            doubleValidator->setNotation(QDoubleValidator::StandardNotation);
+            dialog->setLineEditValidator(0, doubleValidator);
+            dialog->setLineEditPlaceholder(0, "от 0.000 до 89.999");
+
+            doubleValidator = new QDoubleValidator(9.999, 999.999, 3);
+            doubleValidator->setLocale(locale);
+            doubleValidator->setNotation(QDoubleValidator::StandardNotation);
+            dialog->setLineEditValidator(1, doubleValidator);
+            dialog->setLineEditPlaceholder(1, "от 9.999 до 999.999");
+
+            intValidator = new QIntValidator(0, 8000);
+            dialog->setLineEditValidator(2, intValidator);
+            dialog->setLineEditPlaceholder(2, "от 0 до 8000");
+
+            intValidator = new QIntValidator(1, 999999);
+            dialog->setLineEditValidator(3, intValidator);
+            dialog->setLineEditPlaceholder(3, "от 1 до 999999");
+
+            intValidator = new QIntValidator(1, 999999);
+            dialog->setLineEditValidator(4, intValidator);
+            dialog->setLineEditPlaceholder(4, "от 1 до 999999");
+
+            intValidator = new QIntValidator(1, 999999);
+            dialog->setLineEditValidator(5, intValidator);
+            dialog->setLineEditPlaceholder(5, "от 1 до 999999");
+
+            doubleValidator = new QDoubleValidator(1, 99.999, 3);
+            doubleValidator->setLocale(locale);
+            doubleValidator->setNotation(QDoubleValidator::StandardNotation);
+            dialog->setLineEditValidator(6, doubleValidator);
+            dialog->setLineEditPlaceholder(6, "от 1 до 99.999");
+
+            doubleValidator = new QDoubleValidator(1, 99.999, 3);
+            doubleValidator->setLocale(locale);
+            doubleValidator->setNotation(QDoubleValidator::StandardNotation);
+            dialog->setLineEditValidator(7, doubleValidator);
+            dialog->setLineEditPlaceholder(7, "от 1 до 99.999");
         }
     }
 }
 
-void Editor::slotChange3rdRootItemValue(int n) {
+void Editor::slotEditDialChangeComboBox3(int n) {
     if (n != -1) {
+        if (lowerTable->hasFocus()) {
+            dialog->setThirdComboBoxCurrentText(lowerTable->item(lowerTable->currentRow(), 2)->text());
+        }
         QStringList list;
         for (int i = 0; i < lowerTable->rowCount(); i++) {
             if (lowerTable->item(i, 0)->text() == dialog->getCurrentMainComboBoxText())
@@ -424,41 +536,198 @@ void Editor::slotChange3rdRootItemValue(int n) {
         qDebug() << list;
         dialog->fillFieldList(list);
         dialog->placeFieldList(list.size());
+
+        QIntValidator* intValidator = new QIntValidator(1, 99);
+        dialog->setLineEditValidator(0, intValidator);
+        dialog->setLineEditPlaceholder(0, "от 1 до 99");
+    }
+}
+
+void Editor::slotAddDialChangeComboBox1(int n) {
+    if (n != -1) {
+        if (directoryList->currentItem() == directoryList->item(2)) {
+            QSqlQuery query;
+            QString selectPattern = "SELECT termname FROM reference_data.terms WHERE termhierarchy ~ '95.10.*' AND "
+                                    "termhierarchy != '95.10'";
+            query.exec(selectPattern);
+
+            QStringList list;
+            while (query.next()) {
+                list.append(query.value(0).toString());
+            }
+            dialog->setAddDialComboBox2Values(list);
+        }
+        else if (directoryList->currentItem() == directoryList->item(4)) {
+            if (upperTable->hasFocus()) {
+                dialog->setCurrentAddDialCB1Index(upperTable->currentRow());
+            }
+            else {
+                upperTable->setCurrentItem(upperTable->item(n, 0));
+            }
+        }
+    }
+}
+
+void Editor::slotAddDialChangeComboBox2(int n) {
+    if (n != -1) {
+        QSqlQuery query;
+        QString selectCurrent = "SELECT t1.termhierarchy, t2.termhierarchy FROM reference_data.terms t1, reference_data.terms "
+                                "t2 WHERE t1.termname = '%1' AND t2.termname = '%2'";
+        QString selectCurrentQuery = selectCurrent.arg(dialog->getCurrentAddDialCB1Text()).arg(dialog->getCurrentAddDialCB2Text());
+        query.exec(selectCurrentQuery);
+        query.next();
+        QString currentObject = query.value(0).toString();
+        QString currentDegree = query.value(1).toString();
+
+        QString selectPattern = "SELECT termname FROM reference_data.terms WHERE termhierarchy ~ '51.50.*' AND "
+                                "termhierarchy != '51.50' AND termhierarchy NOT IN (SELECT rocket_type FROM "
+                                "target_distribution.damage_regulations WHERE obj_name = '%1' AND degree_name = '%2')";
+        QString selectQuery = selectPattern.arg(currentObject).arg(currentDegree);
+        query.exec(selectQuery);
+
+        QStringList list;
+        while (query.next()) {
+            list.append(query.value(0).toString());
+        }
+        qDebug() << list;
+        dialog->setAddDialComboBox3Values(list);
     }
 }
 
 void Editor::slotAdd() {
     dialog->setWindowTitle(directoryList->currentItem()->text());
 
-    if (directoryList->currentItem() == directoryList->item(4)) {
-        upperTable->setCurrentItem(upperTable->item(0, 0));
-        dialog->setLabelNames(getAllTableHeaderNames());
-        dialog->setEmptyLineEdits(getAllTableHeaderNames().size());
+    QIntValidator* intValidator;
+    QDoubleValidator* doubleValidator;
+    QLocale locale(QLocale::C);
+    locale.setNumberOptions(QLocale::RejectGroupSeparator);
+
+    if (directoryList->currentItem() == directoryList->item(2)) {
+        dialog->setLabelNames(getLowerTableHeaderNames());
+        dialog->setAddDialComboBox1Values(getToBeAddedColumnValues());
+        dialog->setEmptyLineEdits(1);
+
+        intValidator = new QIntValidator(1, 99);
+        dialog->setLineEditValidator(0, intValidator);
+        dialog->setLineEditPlaceholder(0, "от 1 до 99");
+    }
+    else if (directoryList->currentItem() == directoryList->item(4)) {
+        int i = 0;
+        if (upperTable->hasFocus()) {
+            dialog->setLabelNames(getAllTableHeaderNames());
+            dialog->setAddDialComboBox1Values(getUpperTableColumnValues());
+            dialog->setEmptyLineEdits(getLowerTableHeaderNames().size());
+        }
+        else {
+            upperTable->setCurrentItem(upperTable->item(0, 0));
+            dialog->setLabelNames(getAllTableHeaderNames());
+            dialog->setEmptyLineEdits(getAllTableHeaderNames().size());
+
+            intValidator = new QIntValidator(0, 8000);
+            dialog->setLineEditValidator(0, intValidator);
+            dialog->setLineEditPlaceholder(0, "от 0 до 8000");
+            i++;
+        }
+
+        intValidator = new QIntValidator(50, 200);
+        dialog->setLineEditValidator(i, intValidator);
+        dialog->setLineEditPlaceholder(i, "от 50 до 200 с шагом 10");
+
+        doubleValidator = new QDoubleValidator(0, 89.999, 3);
+        doubleValidator->setLocale(locale);
+        doubleValidator->setNotation(QDoubleValidator::StandardNotation);
+        dialog->setLineEditValidator(i + 1, doubleValidator);
+        dialog->setLineEditPlaceholder(i + 1, "от 0.000 до 89.999");
+
+        doubleValidator = new QDoubleValidator(9.999, 999.999, 3);
+        doubleValidator->setLocale(locale);
+        doubleValidator->setNotation(QDoubleValidator::StandardNotation);
+        dialog->setLineEditValidator(i + 2, doubleValidator);
+        dialog->setLineEditPlaceholder(i + 2, "от 9.999 до 999.999");
+
+        intValidator = new QIntValidator(0, 8000);
+        dialog->setLineEditValidator(i + 3, intValidator);
+        dialog->setLineEditPlaceholder(i + 3, "от 0 до 8000");
+
+        intValidator = new QIntValidator(1, 999999);
+        dialog->setLineEditValidator(i + 4, intValidator);
+        dialog->setLineEditPlaceholder(i + 4, "от 1 до 999999");
+
+        intValidator = new QIntValidator(1, 999999);
+        dialog->setLineEditValidator(i + 5, intValidator);
+        dialog->setLineEditPlaceholder(i + 5, "от 1 до 999999");
+
+        intValidator = new QIntValidator(1, 999999);
+        dialog->setLineEditValidator(i + 6, intValidator);
+        dialog->setLineEditPlaceholder(i + 6, "от 1 до 999999");
+
+        doubleValidator = new QDoubleValidator(1, 99.999, 3);
+        doubleValidator->setLocale(locale);
+        doubleValidator->setNotation(QDoubleValidator::StandardNotation);
+        dialog->setLineEditValidator(i + 7, doubleValidator);
+        dialog->setLineEditPlaceholder(i + 7, "от 1 до 99.999");
+
+        doubleValidator = new QDoubleValidator(1, 99.999, 3);
+        doubleValidator->setLocale(locale);
+        doubleValidator->setNotation(QDoubleValidator::StandardNotation);
+        dialog->setLineEditValidator(i + 8, doubleValidator);
+        dialog->setLineEditPlaceholder(i + 8, "от 1 до 99.999");
     }
     else {
         dialog->setLabelNames(getLowerTableHeaderNames());
-        dialog->setEmptyLineEdits(getLowerTableHeaderNames().size());
+        dialog->setAddDialComboBox1Values(getToBeAddedColumnValues());
+        dialog->setEmptyLineEdits(getLowerTableHeaderNames().size() - 1);
 
         if (directoryList->currentItem() == directoryList->item(0)) {
-//            QValidator
+            intValidator = new QIntValidator(10, 1000);
+            dialog->setLineEditValidator(0, intValidator);
+            dialog->setLineEditPlaceholder(0, "от 10 до 1000");
+
+            intValidator = new QIntValidator(10, 999);
+            dialog->setLineEditValidator(1, intValidator);
+            dialog->setLineEditPlaceholder(1, "от 10 до 999");
+
+            intValidator = new QIntValidator(10, 999);
+            dialog->setLineEditValidator(2, intValidator);
+            dialog->setLineEditPlaceholder(2, "от 10 до 999");
+        }
+        else if (directoryList->currentItem() == directoryList->item(1)) {
+            doubleValidator = new QDoubleValidator(0.01, 1, 2);
+            doubleValidator->setLocale(locale);
+            doubleValidator->setNotation(QDoubleValidator::StandardNotation);
+            dialog->setLineEditValidator(0, doubleValidator);
+            dialog->setLineEditPlaceholder(0, "от 0.01 до 1");
+        }
+        else if (directoryList->currentItem() == directoryList->item(3)) {
+            intValidator = new QIntValidator(10, 10000);
+            dialog->setLineEditValidator(0, intValidator);
+            dialog->setLineEditPlaceholder(0, "от 10 до 10000");
+
+            intValidator = new QIntValidator(10, 10000);
+            dialog->setLineEditValidator(1, intValidator);
+            dialog->setLineEditPlaceholder(1, "от 10 до 10000");
         }
     }
 
     if (dialog->exec() == QDialog::Accepted) {
         if (directoryList->currentItem() == directoryList->item(2)) {
-
-        }
-        else if (directoryList->currentItem() == directoryList->item(4)) {
             QSqlQuery query;
-            QString insertPattern = "INSERT INTO target_distribution.fire_table (obj_height, target_distance, "
-                                    "launch_angle, flight_time, trajectory_maxheight, engine_drop_default, "
-                                    "engine_drop_min, engine_drop_max, separation_time_min, "
-                                    "separation_time_max) VALUES (%1, %2, %3, %4, %5, %6, %7, %8, %9, %10)";
-            QString insertQuery = insertPattern.arg(dialog->getCurrentFieldText(0)).arg(dialog->getCurrentFieldText(1))
-                    .arg(dialog->getCurrentFieldText(2)).arg(dialog->getCurrentFieldText(3))
-                    .arg(dialog->getCurrentFieldText(4)).arg(dialog->getCurrentFieldText(5))
-                    .arg(dialog->getCurrentFieldText(6)).arg(dialog->getCurrentFieldText(7))
-                    .arg(dialog->getCurrentFieldText(8)).arg(dialog->getCurrentFieldText(9));
+            QString selectCurrent = "SELECT t1.termhierarchy, t2.termhierarchy, t3.termhierarchy FROM "
+                                    "reference_data.terms t1, reference_data.terms t2, reference_data.terms t3 "
+                                    "WHERE t1.termname = '%1' AND t2.termname = '%2' AND t3.termname = '%3'";
+            QString selectCurrentQuery = selectCurrent.arg(dialog->getCurrentAddDialCB1Text())
+                    .arg(dialog->getCurrentAddDialCB2Text()).arg(dialog->getCurrentAddDialCB3Text());
+
+            query.exec(selectCurrentQuery);
+            query.next();
+            QString currentObject = query.value(0).toString();
+            QString currentDegree = query.value(1).toString();
+            QString currentRocket = query.value(2).toString();
+
+            QString insertPattern = "INSERT INTO target_distribution.damage_regulations (obj_name, degree_name, "
+                                    "rocket_type, quantity) VALUES ('%1', '%2', '%3', %4)";
+            QString insertQuery = insertPattern.arg(currentObject).arg(currentDegree)
+                    .arg(currentRocket).arg(dialog->getCurrentFieldText(0));
 
             if (!query.exec(insertQuery)) {
                 qDebug() << "Unable to make insert operation\n" << query.lastError();
@@ -469,53 +738,73 @@ void Editor::slotAdd() {
                 slotShowDirectoryInfo(directoryList->currentItem());
             }
         }
+        else if (directoryList->currentItem() == directoryList->item(4)) {
+            QSqlQuery query;
+            QString insertPattern = "INSERT INTO target_distribution.fire_table (obj_height, target_distance, "
+                                    "launch_angle, flight_time, trajectory_maxheight, engine_drop_default, "
+                                    "engine_drop_min, engine_drop_max, separation_time_min, "
+                                    "separation_time_max) VALUES (%1, %2, %3, %4, %5, %6, %7, %8, %9, %10)";
+            QString insertQuery;
+            if (upperTable->hasFocus()) {
+                insertQuery = insertPattern.arg(dialog->getCurrentAddDialCB1Text()).arg(dialog->getCurrentFieldText(0))
+                        .arg(dialog->getCurrentFieldText(1)).arg(dialog->getCurrentFieldText(2))
+                        .arg(dialog->getCurrentFieldText(3)).arg(dialog->getCurrentFieldText(4))
+                        .arg(dialog->getCurrentFieldText(5)).arg(dialog->getCurrentFieldText(6))
+                        .arg(dialog->getCurrentFieldText(7)).arg(dialog->getCurrentFieldText(8));
+            }
+            else {
+                insertQuery = insertPattern.arg(dialog->getCurrentFieldText(0)).arg(dialog->getCurrentFieldText(1))
+                        .arg(dialog->getCurrentFieldText(2)).arg(dialog->getCurrentFieldText(3))
+                        .arg(dialog->getCurrentFieldText(4)).arg(dialog->getCurrentFieldText(5))
+                        .arg(dialog->getCurrentFieldText(6)).arg(dialog->getCurrentFieldText(7))
+                        .arg(dialog->getCurrentFieldText(8)).arg(dialog->getCurrentFieldText(9));
+            }
+
+            if (!query.exec(insertQuery)) {
+                qDebug() << "Unable to make insert operation\n" << query.lastError();
+                QMessageBox::critical(this, "Ошибка", "Добавить данные не удалось!");
+            }
+            else {
+                QMessageBox::information(this, "Уведомление", "Добавление прошло успешно!");
+                slotShowDirectoryInfo(directoryList->currentItem());
+                upperTable->setCurrentItem(upperTable->item(dialog->getCurrentAddDialCB1Index(), 0));
+            }
+        }
         else {
             QSqlQuery query;
 
             QString insertPattern;
             QString insertQuery;
-            QString insertPattern2 = "INSERT INTO reference_data.terms (termhierarchy, termname, termshortname, "
-                                     "termsrule) VALUES ('%1', '%2', '', 0)";
-            QString insertQuery2;
 
             if (directoryList->currentItem() == directoryList->item(0)) {
                 insertPattern = "INSERT INTO target_distribution.warhead_characteristics "
                                 "(rocket_type, attack_range, deviation_range, deviation_lateral) "
-                                "VALUES ('%1', %2, %3, %4)";
-                insertQuery = insertPattern.arg("11.11.11.11").arg(dialog->getCurrentFieldText(1))
-                        .arg(dialog->getCurrentFieldText(2)).arg(dialog->getCurrentFieldText(3));
-
-                insertQuery2 = insertPattern2.arg("11.11.11.11").arg(dialog->getCurrentFieldText(0));
+                                "VALUES ((SELECT termhierarchy FROM reference_data.terms WHERE "
+                                "termname = '%1'), %2, %3, %4)";
+                insertQuery = insertPattern.arg(dialog->getCurrentAddDialCB1Text()).arg(dialog->getCurrentFieldText(0))
+                        .arg(dialog->getCurrentFieldText(1)).arg(dialog->getCurrentFieldText(2));
             }
             else if (directoryList->currentItem() == directoryList->item(1)) {
-                insertPattern = "INSERT INTO target_distribution.damage_degree "
-                                "(degree_name, value) VALUES ('%1', %2)";
-                insertQuery = insertPattern.arg("22.22.22.22").arg(dialog->getCurrentFieldText(1));
-
-                insertQuery2 = insertPattern2.arg("22.22.22.22").arg(dialog->getCurrentFieldText(0));
+                insertPattern = "INSERT INTO target_distribution.damage_degree (degree_name, value) "
+                                "VALUES ((SELECT termhierarchy FROM reference_data.terms WHERE "
+                                "termname = '%1'), %2)";
+                insertQuery = insertPattern.arg(dialog->getCurrentAddDialCB1Text()).arg(dialog->getCurrentFieldText(0));
             }
             else if (directoryList->currentItem() == directoryList->item(3)) {
-                insertPattern = "INSERT INTO target_distribution.target_size "
-                                "(target_name, front, depth) VALUES ('%1', %2, %3)";
-                insertQuery = insertPattern.arg("44.44.44.44").arg(dialog->getCurrentFieldText(1))
-                        .arg(dialog->getCurrentFieldText(2));
-
-                insertQuery2 = insertPattern2.arg("44.44.44.44").arg(dialog->getCurrentFieldText(0));
+                insertPattern = "INSERT INTO target_distribution.target_size (target_name, front, depth) "
+                                "VALUES ((SELECT termhierarchy FROM reference_data.terms WHERE "
+                                "termname = '%1'), %2, %3)";
+                insertQuery = insertPattern.arg(dialog->getCurrentAddDialCB1Text()).arg(dialog->getCurrentFieldText(0))
+                        .arg(dialog->getCurrentFieldText(1));
             }
 
-            db.transaction();
             if (!query.exec(insertQuery)) {
-                qDebug() << "Unable to make 1st insert operation\n" << query.lastError();
-            }
-            if (!query.exec(insertQuery2)) {
-                qDebug() << "Unable to make 2nd insert operation\n" << query.lastError();
-            }
-            if (db.commit()) {
-                QMessageBox::information(this, "Уведомление", "Добавление прошло успешно!");
-                slotShowDirectoryInfo(directoryList->currentItem());
+                qDebug() << "Unable to make insert operation\n" << query.lastError();
+                QMessageBox::critical(this, "Ошибка", "Добавить данные не удалось!");
             }
             else {
-                QMessageBox::critical(this, "Ошибка", "Добавить данные не удалось!");
+                QMessageBox::information(this, "Уведомление", "Добавление прошло успешно!");
+                slotShowDirectoryInfo(directoryList->currentItem());
             }
         }
     }
@@ -525,24 +814,12 @@ void Editor::slotEdit() {
     dialog->setWindowTitle(directoryList->currentItem()->text());
 
     if (directoryList->currentItem() == directoryList->item(4)) {
-        dialog->setMainComboBoxValues(getUpperTableColumnValues());
+        dialog->setEditDialComboBox1Values(getUpperTableColumnValues());
         dialog->setLabelNames(getAllTableHeaderNames());
     }
     else {
         dialog->setLabelNames(getLowerTableHeaderNames());
-        dialog->setMainComboBoxValues(getRootColumnValues());
-
-        if (directoryList->currentItem() == directoryList->item(0)) {
-
-//            QIntValidator validator1(10, 1000, this);
-//            dialog->setLineEditValidator(0, validator1);
-
-//            QIntValidator validator2(10, 999);
-//            dialog->setLineEditValidator(1, validator2);
-
-//            QIntValidator validator3(10, 999);
-//            dialog->setLineEditValidator(2, validator3);
-        }
+        dialog->setEditDialComboBox1Values(getToBeEditedColumnValues());
     }
 
     if (dialog->exec() == QDialog::Accepted) {
@@ -612,7 +889,35 @@ void Editor::slotEdit() {
 
 void Editor::slotDelete() {  
     if (directoryList->currentItem() == directoryList->item(2)) {
+        QString classifierName1 = lowerTable->item(lowerTable->currentRow(), 0)->text();
+        QString classifierName2 = lowerTable->item(lowerTable->currentRow(), 1)->text();
+        QString classifierName3 = lowerTable->item(lowerTable->currentRow(), 2)->text();
 
+        QSqlQuery query;
+        QString selectPattern = "SELECT t1.termhierarchy, t2.termhierarchy, t3.termhierarchy FROM "
+                                "reference_data.terms t1, reference_data.terms t2, reference_data.terms t3 "
+                                "WHERE t1.termname = '%1' AND t2.termname = '%2' AND t3.termname = '%3'";
+        QString selectQuery = selectPattern.arg(classifierName1).arg(classifierName2).arg(classifierName3);
+        query.exec(selectQuery);
+
+        QStringList classifierIds;
+        query.next();
+        classifierIds.append(query.value(0).toString());
+        classifierIds.append(query.value(1).toString());
+        classifierIds.append(query.value(2).toString());
+
+        QString deletePattern = "DELETE FROM target_distribution.damage_regulations WHERE obj_name = '%1' "
+                                "AND degree_name = '%2' AND rocket_type = '%3'";
+        QString deleteQuery = deletePattern.arg(classifierIds.at(0)).arg(classifierIds.at(1)).arg(classifierIds.at(2));
+
+        if (!query.exec(deleteQuery)) {
+            qDebug() << "Unable to make delete operation\n" << query.lastError();
+            QMessageBox::critical(this, "Ошибка", "Удалить данные не удалось!");
+        }
+        else {
+            QMessageBox::information(this, "Уведомление", "Удаление прошло успешно!");
+            slotShowDirectoryInfo(directoryList->currentItem());
+        }
     }
     else if (directoryList->currentItem() == directoryList->item(4)) {
         QSqlQuery query;
@@ -638,6 +943,7 @@ void Editor::slotDelete() {
             QMessageBox::information(this, "Уведомление", "Удаление прошло успешно!");
             if (lowerTable->hasFocus()) {
                 slotShowLowerFireTable();
+                editAction->setEnabled(false);
                 deleteAction->setEnabled(false);
             }
             else {
@@ -667,22 +973,14 @@ void Editor::slotDelete() {
         }
 
         QString deleteQuery = deletePattern.arg(classifierId);
-        QString deletePattern2 = "DELETE FROM reference_data.terms WHERE termhierarchy = '%1'";
-        QString deleteQuery2 = deletePattern2.arg(classifierId);
 
-        db.transaction();
         if (!query.exec(deleteQuery)) {
-            qDebug() << "Unable to make 1st delete operation\n" << query.lastError();
-        }
-        if (!query.exec(deleteQuery2)) {
-            qDebug() << "Unable to make 2nd delete operation\n" << query.lastError();
-        }
-        if (db.commit()) {
-            QMessageBox::information(this, "Уведомление", "Удаление прошло успешно!");
-            slotShowDirectoryInfo(directoryList->currentItem());
+            qDebug() << "Unable to make delete operation\n" << query.lastError();
+            QMessageBox::critical(this, "Ошибка", "Удалить данные не удалось!");
         }
         else {
-            QMessageBox::critical(this, "Ошибка", "Удалить данные не удалось!");
+            QMessageBox::information(this, "Уведомление", "Удаление прошло успешно!");
+            slotShowDirectoryInfo(directoryList->currentItem());
         }
     }
 }
@@ -702,7 +1000,37 @@ QStringList Editor::getAllTableHeaderNames() {
     return list;
 }
 
-QStringList Editor::getRootColumnValues() {
+QStringList Editor::getToBeAddedColumnValues() {
+    QSqlQuery query;
+    QString selectPattern;
+
+    if (directoryList->currentItem() == directoryList->item(0)) {
+        selectPattern = "SELECT termname FROM reference_data.terms WHERE termhierarchy ~ '51.50.*' AND "
+                        "termhierarchy NOT IN (SELECT rocket_type FROM target_distribution.warhead_characteristics)";
+    }
+    else if (directoryList->currentItem() == directoryList->item(1)) {
+        selectPattern = "SELECT termname FROM reference_data.terms WHERE termhierarchy ~ '95.10.*' AND "
+                        "termhierarchy NOT IN (SELECT degree_name FROM target_distribution.damage_degree)";
+    }
+    else if (directoryList->currentItem() == directoryList->item(2)) {
+        selectPattern = "SELECT termname FROM reference_data.terms WHERE termhierarchy ~ '90.*' AND "
+                        "termhierarchy != '90.10' AND termhierarchy != '90.20' AND termhierarchy != '90.30'";
+    }
+    else if (directoryList->currentItem() == directoryList->item(3)) {
+        selectPattern = "SELECT termname FROM reference_data.terms WHERE termhierarchy ~ '90.20.*' AND "
+                        "termhierarchy NOT IN (SELECT target_name FROM target_distribution.target_size)";
+    }
+    query.exec(selectPattern);
+    query.next(); // exclude parent
+
+    QStringList list;
+    while (query.next()) {
+        list.append(query.value(0).toString());
+    }
+    return list;
+}
+
+QStringList Editor::getToBeEditedColumnValues() {
     QStringList list;
     for (int i = 0; i < lowerTable->rowCount(); i++) {
         if (!list.contains(lowerTable->item(i, 0)->text())) {

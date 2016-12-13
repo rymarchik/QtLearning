@@ -4,10 +4,16 @@
 Dialog::Dialog(QWidget *parent) :
     QDialog(parent, Qt::WindowCloseButtonHint)
 {
-    mainComboBox = new QComboBox;
-    comboBox2 = new QComboBox;
-    comboBox2->setObjectName("secondCB");
-    comboBox3 = new QComboBox;
+    addDialComboBox1 = new QComboBox;
+    addDialComboBox2 = new QComboBox;
+    addDialComboBox2->setObjectName("addSecondCB");
+    addDialComboBox3 = new QComboBox;
+    addDialComboBox3->setObjectName("addThirdCB");
+    editDialComboBox1 = new QComboBox;
+    editDialComboBox2 = new QComboBox;
+    editDialComboBox2->setObjectName("editSecondCB");
+    editDialComboBox3 = new QComboBox;
+    editDialComboBox3->setObjectName("editThirdCB");
 
     labelList = new QList<QLabel*>;
     fieldList = new QList<QLineEdit*>;
@@ -33,9 +39,11 @@ Dialog::Dialog(QWidget *parent) :
 
     connect(okButton, SIGNAL(clicked()), this, SLOT(accept()));
     connect(cancelButton, SIGNAL(clicked()), this, SLOT(reject()));
-    connect(mainComboBox, SIGNAL(currentIndexChanged(int)), this->parent(), SLOT(slotChangeRootItemValue(int)));
-    connect(comboBox2, SIGNAL(currentIndexChanged(int)), this->parent(), SLOT(slotChange2ndRootItemValue(int)));
-    connect(comboBox3, SIGNAL(currentIndexChanged(int)), this->parent(), SLOT(slotChange3rdRootItemValue(int)));
+    connect(addDialComboBox1, SIGNAL(currentIndexChanged(int)), this->parent(), SLOT(slotAddDialChangeComboBox1(int)));
+    connect(addDialComboBox2, SIGNAL(currentIndexChanged(int)), this->parent(), SLOT(slotAddDialChangeComboBox2(int)));
+    connect(editDialComboBox1, SIGNAL(currentIndexChanged(int)), this->parent(), SLOT(slotEditDialChangeComboBox1(int)));
+    connect(editDialComboBox2, SIGNAL(currentIndexChanged(int)), this->parent(), SLOT(slotEditDialChangeComboBox2(int)));
+    connect(editDialComboBox3, SIGNAL(currentIndexChanged(int)), this->parent(), SLOT(slotEditDialChangeComboBox3(int)));
 }
 
 void Dialog::clearLayout(QLayout* layout) {
@@ -73,49 +81,102 @@ void Dialog::setLabelNames(QStringList list) {
     }
 }
 
-void Dialog::setMainComboBoxValues(QStringList list) {
-    mainComboBox->setHidden(false);
-    comboBox2->setHidden(true);
-    comboBox3->setHidden(true);
-    mainComboBox->clear();
+void Dialog::setAddDialComboBox1Values(QStringList list) {
+    addDialComboBox1->setHidden(false);
+    addDialComboBox2->setHidden(true);
+    addDialComboBox3->setHidden(true);
+    editDialComboBox1->setHidden(true);
+    editDialComboBox2->setHidden(true);
+    editDialComboBox3->setHidden(true);
+    addDialComboBox1->clear();
 
-    mainComboBox->addItems(list);
-    fieldLayout->insertWidget(0, mainComboBox);
+    addDialComboBox1->addItems(list);
+    fieldLayout->insertWidget(0, addDialComboBox1);
 }
 
-void Dialog::setSecondComboBoxValues(QStringList list) {
-    comboBox2->setHidden(false);
-    comboBox2->clear();
-    comboBox2->addItems(list);
+void Dialog::setAddDialComboBox2Values(QStringList list) {
+    addDialComboBox2->setHidden(false);
+    addDialComboBox2->clear();
+    addDialComboBox2->addItems(list);
 
     int comboBoxOverseer = 0;
     for (int i = 0; i < fieldLayout->count(); i++) {
-        if (fieldLayout->itemAt(i)->widget()->objectName() == "secondCB") {
+        if (fieldLayout->itemAt(i)->widget()->objectName() == "addSecondCB") {
             comboBoxOverseer++;
             return;
         }
     }
-
     if (comboBoxOverseer == 0) {
-        fieldLayout->insertWidget(0, comboBox2);
+        fieldLayout->insertWidget(0, addDialComboBox2);
     }
 }
 
-void Dialog::setThirdComboBoxValues(QStringList list) {
-    comboBox3->setHidden(false);
-    comboBox3->clear();
-    comboBox3->addItems(list);
+void Dialog::setAddDialComboBox3Values(QStringList list) {
+    addDialComboBox3->setHidden(false);
+    addDialComboBox3->clear();
+    addDialComboBox3->addItems(list);
 
-    if (fieldLayout->count() < 4) {
-        fieldLayout->insertWidget(0, comboBox3);
+    int comboBoxOverseer = 0;
+    for (int i = 0; i < fieldLayout->count(); i++) {
+        if (fieldLayout->itemAt(i)->widget()->objectName() == "addThirdCB") {
+            comboBoxOverseer++;
+            return;
+        }
+    }
+    if (comboBoxOverseer == 0) {
+        fieldLayout->insertWidget(0, addDialComboBox3);
+    }
+}
+
+void Dialog::setEditDialComboBox1Values(QStringList list) {
+    addDialComboBox1->setHidden(true);
+    addDialComboBox2->setHidden(true);
+    addDialComboBox3->setHidden(true);
+    editDialComboBox1->setHidden(false);
+    editDialComboBox2->setHidden(true);
+    editDialComboBox3->setHidden(true);
+    editDialComboBox1->clear();
+
+    editDialComboBox1->addItems(list);
+    fieldLayout->insertWidget(0, editDialComboBox1);
+}
+
+void Dialog::setEditDialComboBox2Values(QStringList list) {
+    editDialComboBox2->setHidden(false);
+    editDialComboBox2->clear();
+    editDialComboBox2->addItems(list);
+
+    int comboBoxOverseer = 0;
+    for (int i = 0; i < fieldLayout->count(); i++) {
+        if (fieldLayout->itemAt(i)->widget()->objectName() == "editSecondCB") {
+            comboBoxOverseer++;
+            return;
+        }
+    }
+    if (comboBoxOverseer == 0) {
+        fieldLayout->insertWidget(0, editDialComboBox2);
+    }
+}
+
+void Dialog::setEditDialComboBox3Values(QStringList list) {
+    editDialComboBox3->setHidden(false);
+    editDialComboBox3->clear();
+    editDialComboBox3->addItems(list);
+
+    int comboBoxOverseer = 0;
+    for (int i = 0; i < fieldLayout->count(); i++) {
+        if (fieldLayout->itemAt(i)->widget()->objectName() == "editThirdCB") {
+            comboBoxOverseer++;
+            return;
+        }
+    }
+    if (comboBoxOverseer == 0) {
+        fieldLayout->insertWidget(0, editDialComboBox3);
     }
 }
 
 void Dialog::setEmptyLineEdits(int n) {
     clearLineEdits(fieldLayout);
-    mainComboBox->setHidden(true);
-    comboBox2->setHidden(true);
-    comboBox3->setHidden(true);
     fieldList->clear();
 
     for (int i = 0; i < n; i++) {
@@ -141,24 +202,59 @@ void Dialog::fillFieldList(QStringList list) {
 }
 
 void Dialog::setMainComboBoxCurrentIndex(int index) {
-    mainComboBox->setCurrentIndex(index);
+    editDialComboBox1->setCurrentIndex(index);
 }
 
+void Dialog::setMainComboBoxCurrentText(QString str) {
+    editDialComboBox1->setCurrentText(str);
+}
+
+void Dialog::setSecondComboBoxCurrentText(QString str) {
+    editDialComboBox2->setCurrentText(str);
+}
+
+void Dialog::setThirdComboBoxCurrentText(QString str) {
+    editDialComboBox3->setCurrentText(str);
+}
+
+
 int Dialog::getMainComboBoxCurrentIndex() {
-    return mainComboBox->currentIndex();
+    return editDialComboBox1->currentIndex();
 }
 
 QString Dialog::getCurrentMainComboBoxText() {
-    return mainComboBox->currentText();
+    return editDialComboBox1->currentText();
 }
 
 QString Dialog::getCurrentSecondComboBoxText() {
-    return comboBox2->currentText();
+    return editDialComboBox2->currentText();
 }
 
 QString Dialog::getCurrentThirdComboBoxText() {
-    return comboBox3->currentText();
+    return editDialComboBox3->currentText();
 }
+
+
+int Dialog::getCurrentAddDialCB1Index() {
+    return addDialComboBox1->currentIndex();
+}
+
+QString Dialog::getCurrentAddDialCB1Text() {
+    return addDialComboBox1->currentText();
+}
+
+QString Dialog::getCurrentAddDialCB2Text() {
+    return addDialComboBox2->currentText();
+}
+
+QString Dialog::getCurrentAddDialCB3Text() {
+    return addDialComboBox3->currentText();
+}
+
+void Dialog::setCurrentAddDialCB1Index(int index) {
+    addDialComboBox1->setCurrentIndex(index);
+}
+
 
 QString Dialog::getCurrentFieldText(int n) {
     return fieldList->at(n)->text();
@@ -168,10 +264,14 @@ int Dialog::getFieldsCount() {
     return fieldList->size();
 }
 
-void Dialog::setLineEditValidator(int index, QIntValidator validator) {
+void Dialog::setLineEditValidator(int index, QIntValidator* validator) {
     fieldList->at(index)->setValidator(validator);
 }
 
-void Dialog::setLineEditValidator(int index, QDoubleValidator validator) {
+void Dialog::setLineEditValidator(int index, QDoubleValidator* validator) {
     fieldList->at(index)->setValidator(validator);
+}
+
+void Dialog::setLineEditPlaceholder(int index, QString str) {
+    fieldList->at(index)->setPlaceholderText(str);
 }
