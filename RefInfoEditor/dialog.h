@@ -2,6 +2,10 @@
 #define DIALOG_H
 
 #include <QtWidgets>
+#include <QProcess>
+#include <windows.h>
+#include <tlhelp32.h>
+#include "ShellAPI.h"
 
 class Dialog : public QDialog
 {
@@ -47,6 +51,10 @@ public:
     void setLineEditValidator(int, QDoubleValidator*);
     void setLineEditPlaceholder(int, QString);
 
+    void openKeyboard();
+    void closeKeyboard();
+    QString copyToQString(WCHAR array[MAX_PATH]);
+
 private:
     QComboBox* addDialComboBox1;
     QComboBox* addDialComboBox2;
@@ -63,6 +71,9 @@ private:
 
     QPushButton* okButton;
     QPushButton* cancelButton;
+
+    QProcess* process = new QProcess(this);
+    QString virtualKeyboard = "explorer.exe C:\\Windows\\System32\\osk.exe";
 
 private slots:
 

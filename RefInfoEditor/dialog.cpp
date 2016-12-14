@@ -22,6 +22,7 @@ Dialog::Dialog(QWidget *parent) :
     cancelButton = new QPushButton("Отменить");
 
     labelLayout = new QVBoxLayout;
+    labelLayout->setContentsMargins(0, 10, 15, 0);
     fieldLayout = new QVBoxLayout;
 
     QHBoxLayout* infoLayout = new QHBoxLayout;
@@ -31,10 +32,13 @@ Dialog::Dialog(QWidget *parent) :
     QHBoxLayout* buttonLayout = new QHBoxLayout;
     buttonLayout->addWidget(okButton);
     buttonLayout->addWidget(cancelButton);
+    buttonLayout->setSpacing(33);
+    buttonLayout->setContentsMargins(0, 10, 0, 0);
 
     QVBoxLayout* mainLayout = new QVBoxLayout;
     mainLayout->addLayout(infoLayout);
     mainLayout->addLayout(buttonLayout);
+    mainLayout->setContentsMargins(25, 10, 25, 15);
     setLayout(mainLayout);
 
     connect(okButton, SIGNAL(clicked()), this, SLOT(accept()));
@@ -78,16 +82,14 @@ void Dialog::setLabelNames(QStringList list) {
     for (int i = 0; i < list.size(); i++) {
         labelList->append(new QLabel(list.at(i)));
         labelLayout->addWidget(labelList->last());
+        if (!list.at(i).contains("\n")) {
+            labelLayout->addSpacing(12);
+        }
     }
 }
 
 void Dialog::setAddDialComboBox1Values(QStringList list) {
     addDialComboBox1->setHidden(false);
-    addDialComboBox2->setHidden(true);
-    addDialComboBox3->setHidden(true);
-    editDialComboBox1->setHidden(true);
-    editDialComboBox2->setHidden(true);
-    editDialComboBox3->setHidden(true);
     addDialComboBox1->clear();
 
     addDialComboBox1->addItems(list);
@@ -177,6 +179,12 @@ void Dialog::setEditDialComboBox3Values(QStringList list) {
 
 void Dialog::setEmptyLineEdits(int n) {
     clearLineEdits(fieldLayout);
+    addDialComboBox1->setHidden(true);
+    addDialComboBox2->setHidden(true);
+    addDialComboBox3->setHidden(true);
+    editDialComboBox1->setHidden(true);
+    editDialComboBox2->setHidden(true);
+    editDialComboBox3->setHidden(true);
     fieldList->clear();
 
     for (int i = 0; i < n; i++) {
@@ -274,4 +282,36 @@ void Dialog::setLineEditValidator(int index, QDoubleValidator* validator) {
 
 void Dialog::setLineEditPlaceholder(int index, QString str) {
     fieldList->at(index)->setPlaceholderText(str);
+}
+
+QString Dialog::copyToQString(WCHAR array[MAX_PATH]) {
+    QString string;
+    int i = 0;
+    while (array[i] != 0)
+    {
+        string[i] = array[i];
+        i++;
+    }
+    return string;
+}
+
+void Dialog::openKeyboard() {
+    process->start(virtualKeyboard);
+}
+
+void Dialog::closeKeyboard() {
+    HANDLE hSnap = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
+    PROCESSENTRY32 proc = { sizeof(proc) };
+    if (Process32First(hSnap, &proc))
+    {
+        while (Process32Next(hSnap, &proc))
+        {
+            QString fileName = copyToQString(proc.szExeFile);
+            if(fileName == QString("osk.exe"))
+            {
+                HANDLE hp = OpenProcess(1, false, proc.th32ProcessID );
+                TerminateProcess(hp, 0);
+            }
+        }
+    }
 }

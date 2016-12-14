@@ -264,6 +264,7 @@ void Editor::slotShowDirectoryInfo(QListWidgetItem* dirItem) {
         lowerTableHeader->setHidden(true);
         lowerTable->clear();
 
+
         QSqlQuery query;
         QString selectUpperTableQuery = "SELECT DISTINCT obj_height FROM target_distribution.fire_table ORDER BY obj_height";
 
@@ -332,10 +333,10 @@ void Editor::slotShowLowerFireTable() {
 
     QStringList headerNames;
     headerNames << "Дальность до цели, км" << "Угол пуска, град" << "Время полета, с"
-                << "Максимальная высота\n траектории, м" << "Место падения двигателя\n по умолчанию, м"
-                << "Минимальное расстояние места\n падения двигателя, м"
-                << "Максимальное расстояние места\n падения двигателя, м"
-                << "Минимальное время\n разделения, с" << "Максимальное время\n разделения, с";
+                << "Максимальная высота\nтраектории, м" << "Место падения двигателя\nпо умолчанию, м"
+                << "Минимальное расстояние места\nпадения двигателя, м"
+                << "Максимальное расстояние места\nпадения двигателя, м"
+                << "Минимальное время\nразделения, с" << "Максимальное время\nразделения, с";
     lowerTable->setHorizontalHeaderLabels(headerNames);
 
     lowerTableHeader->setSectionResizeMode(QHeaderView::ResizeToContents);
@@ -558,7 +559,7 @@ void Editor::slotAddDialChangeComboBox1(int n) {
             dialog->setAddDialComboBox2Values(list);
         }
         else if (directoryList->currentItem() == directoryList->item(4)) {
-            if (upperTable->hasFocus()) {
+            if (upperTable->hasFocus() || lowerTable->hasFocus()) {
                 dialog->setCurrentAddDialCB1Index(upperTable->currentRow());
             }
             else {
@@ -596,6 +597,7 @@ void Editor::slotAddDialChangeComboBox2(int n) {
 
 void Editor::slotAdd() {
     dialog->setWindowTitle(directoryList->currentItem()->text());
+    dialog->openKeyboard();
 
     QIntValidator* intValidator;
     QDoubleValidator* doubleValidator;
@@ -604,8 +606,8 @@ void Editor::slotAdd() {
 
     if (directoryList->currentItem() == directoryList->item(2)) {
         dialog->setLabelNames(getLowerTableHeaderNames());
-        dialog->setAddDialComboBox1Values(getToBeAddedColumnValues());
         dialog->setEmptyLineEdits(1);
+        dialog->setAddDialComboBox1Values(getToBeAddedColumnValues());
 
         intValidator = new QIntValidator(1, 99);
         dialog->setLineEditValidator(0, intValidator);
@@ -613,10 +615,10 @@ void Editor::slotAdd() {
     }
     else if (directoryList->currentItem() == directoryList->item(4)) {
         int i = 0;
-        if (upperTable->hasFocus()) {
+        if (upperTable->hasFocus() || lowerTable->hasFocus()) {
             dialog->setLabelNames(getAllTableHeaderNames());
-            dialog->setAddDialComboBox1Values(getUpperTableColumnValues());
             dialog->setEmptyLineEdits(getLowerTableHeaderNames().size());
+            dialog->setAddDialComboBox1Values(getUpperTableColumnValues());
         }
         else {
             upperTable->setCurrentItem(upperTable->item(0, 0));
@@ -675,8 +677,8 @@ void Editor::slotAdd() {
     }
     else {
         dialog->setLabelNames(getLowerTableHeaderNames());
-        dialog->setAddDialComboBox1Values(getToBeAddedColumnValues());
         dialog->setEmptyLineEdits(getLowerTableHeaderNames().size() - 1);
+        dialog->setAddDialComboBox1Values(getToBeAddedColumnValues());
 
         if (directoryList->currentItem() == directoryList->item(0)) {
             intValidator = new QIntValidator(10, 1000);
@@ -808,10 +810,12 @@ void Editor::slotAdd() {
             }
         }
     }
+    dialog->closeKeyboard();
 }
 
 void Editor::slotEdit() {
     dialog->setWindowTitle(directoryList->currentItem()->text());
+    dialog->openKeyboard();
 
     if (directoryList->currentItem() == directoryList->item(4)) {
         dialog->setEditDialComboBox1Values(getUpperTableColumnValues());
@@ -885,6 +889,7 @@ void Editor::slotEdit() {
             upperTable->setCurrentItem(upperTable->item(dialog->getMainComboBoxCurrentIndex(), 0));
         }
     }
+    dialog->closeKeyboard();
 }
 
 void Editor::slotDelete() {  
