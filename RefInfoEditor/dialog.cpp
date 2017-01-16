@@ -1,5 +1,6 @@
 #include "dialog.h"
 #include "editor.h"
+#include "showkeyboardfilter.h"
 
 Dialog::Dialog(QWidget *parent) :
     QDialog(parent, Qt::WindowCloseButtonHint)
@@ -189,7 +190,8 @@ void Dialog::setEmptyLineEdits(int n) {
 
     for (int i = 0; i < n; i++) {
         fieldList->append(new QLineEdit);
-        fieldLayout->addWidget(fieldList->at(i));
+        fieldList->at(i)->installEventFilter(new ShowKeyboardFilter(fieldList->at(i)));
+        fieldLayout->addWidget(fieldList->at(i));     
     }
 }
 
@@ -206,6 +208,7 @@ void Dialog::fillFieldList(QStringList list) {
 
     for (int i = 0; i < list.size(); i++) {
         fieldList->append(new QLineEdit(list.at(i)));
+        fieldList->at(i)->installEventFilter(new ShowKeyboardFilter(fieldList->at(i)));
     }
 }
 
@@ -284,34 +287,55 @@ void Dialog::setLineEditPlaceholder(int index, QString str) {
     fieldList->at(index)->setPlaceholderText(str);
 }
 
-QString Dialog::copyToQString(WCHAR array[MAX_PATH]) {
-    QString string;
-    int i = 0;
-    while (array[i] != 0)
-    {
-        string[i] = array[i];
-        i++;
-    }
-    return string;
-}
+//QString Dialog::copyToQString(WCHAR array[MAX_PATH]) {
+//    QString string;
+//    int i = 0;
+//    while (array[i] != 0)
+//    {
+//        string[i] = array[i];
+//        i++;
+//    }
+//    return string;
+//}
 
-void Dialog::openKeyboard() {
-    process->start(virtualKeyboard);
-}
+//void Dialog::openKeyboard() {
+//    process->start(virtualKeyboard);
+//}
+// globalPos = widget->mapToGlobal(QPoint(0, widget->height()));
+//+    QWidget::move(globalX, globalY);
+//void Dialog::closeKeyboard() {
+//    HANDLE hSnap = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
+//    PROCESSENTRY32 proc = { sizeof(proc) };
+//    if (Process32First(hSnap, &proc))
+//    {
+//        while (Process32Next(hSnap, &proc))
+//        {
+//            QString fileName = copyToQString(proc.szExeFile);
+//            if(fileName == QString("osk.exe"))
+//            {
+//                HANDLE hp = OpenProcess(1, false, proc.th32ProcessID );
+//                TerminateProcess(hp, 0);
+//            }
+//        }
+//    }
+//}
+//void Dialog::openKeyboard() {
+//    process->start(virtualKeyboard);
+//}
 
-void Dialog::closeKeyboard() {
-    HANDLE hSnap = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
-    PROCESSENTRY32 proc = { sizeof(proc) };
-    if (Process32First(hSnap, &proc))
-    {
-        while (Process32Next(hSnap, &proc))
-        {
-            QString fileName = copyToQString(proc.szExeFile);
-            if(fileName == QString("osk.exe"))
-            {
-                HANDLE hp = OpenProcess(1, false, proc.th32ProcessID );
-                TerminateProcess(hp, 0);
-            }
-        }
-    }
-}
+//void Dialog::closeKeyboard() {
+//    HANDLE hSnap = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
+//    PROCESSENTRY32 proc = { sizeof(proc) };
+//    if (Process32First(hSnap, &proc))
+//    {
+//        while (Process32Next(hSnap, &proc))
+//        {
+//            QString fileName = copyToQString(proc.szExeFile);
+//            if(fileName == QString("osk.exe"))
+//            {
+//                HANDLE hp = OpenProcess(1, false, proc.th32ProcessID );
+//                TerminateProcess(hp, 0);
+//            }
+//        }
+//    }
+//}

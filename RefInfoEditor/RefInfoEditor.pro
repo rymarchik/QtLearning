@@ -14,10 +14,12 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
         editor.cpp \
-    dialog.cpp
+    dialog.cpp \
+    showkeyboardfilter.cpp
 
 HEADERS  += editor.h \
-    dialog.h
+    dialog.h \
+    showkeyboardfilter.h
 
 FORMS    +=
 

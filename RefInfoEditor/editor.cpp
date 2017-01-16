@@ -597,7 +597,6 @@ void Editor::slotAddDialChangeComboBox2(int n) {
 
 void Editor::slotAdd() {
     dialog->setWindowTitle(directoryList->currentItem()->text());
-    dialog->openKeyboard();
 
     QIntValidator* intValidator;
     QDoubleValidator* doubleValidator;
@@ -810,12 +809,10 @@ void Editor::slotAdd() {
             }
         }
     }
-    dialog->closeKeyboard();
 }
 
 void Editor::slotEdit() {
     dialog->setWindowTitle(directoryList->currentItem()->text());
-    dialog->openKeyboard();
 
     if (directoryList->currentItem() == directoryList->item(4)) {
         dialog->setEditDialComboBox1Values(getUpperTableColumnValues());
@@ -889,7 +886,6 @@ void Editor::slotEdit() {
             upperTable->setCurrentItem(upperTable->item(dialog->getMainComboBoxCurrentIndex(), 0));
         }
     }
-    dialog->closeKeyboard();
 }
 
 void Editor::slotDelete() {  
@@ -1011,7 +1007,8 @@ QStringList Editor::getToBeAddedColumnValues() {
 
     if (directoryList->currentItem() == directoryList->item(0)) {
         selectPattern = "SELECT termname FROM reference_data.terms WHERE termhierarchy ~ '51.50.*' AND "
-                        "termhierarchy NOT IN (SELECT rocket_type FROM target_distribution.warhead_characteristics)";
+                        "termname != 'Не определен' AND termhierarchy NOT IN (SELECT rocket_type FROM "
+                        "target_distribution.warhead_characteristics)";
     }
     else if (directoryList->currentItem() == directoryList->item(1)) {
         selectPattern = "SELECT termname FROM reference_data.terms WHERE termhierarchy ~ '95.10.*' AND "
